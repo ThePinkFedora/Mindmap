@@ -6,7 +6,7 @@ exports.up = function(knex) {
     return knex.schema.createTable('map',(table) => {
         table.uuid('id').primary();
         table.string('name').notNullable();
-        table.text('description').notNullable().defaultTo("");
+        table.text('description').defaultTo("").notNullable();
     });
 };
 

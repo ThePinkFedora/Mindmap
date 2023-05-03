@@ -10,8 +10,8 @@ exports.up = function (knex) {
             .onUpdate('CASCADE')
             .onDelete('CASCADE');
         table.string('type').notNullable();
-        table.string('name').defaultTo("");
-        table.text('value').notNullable();
+        table.string('name').notNullable().defaultTo("");
+        table.text('value').notNullable().defaultTo("");
     });
 };
 

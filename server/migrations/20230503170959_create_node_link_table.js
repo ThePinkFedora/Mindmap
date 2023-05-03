@@ -8,11 +8,13 @@ exports.up = function (knex) {
         table.uuid('node_a_id')
             .references('node.id')
             .onUpdate('CASCADE')
-            .onDelete('CASCADE');
+            .onDelete('CASCADE')
+            .notNullable();
         table.uuid('node_b_id')
             .references('node.id')
             .onUpdate('CASCADE')
-            .onDelete('CASCADE');
+            .onDelete('CASCADE')
+            .notNullable();
     });
 };
 
