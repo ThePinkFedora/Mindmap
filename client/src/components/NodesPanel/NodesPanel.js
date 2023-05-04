@@ -1,9 +1,15 @@
 import { useContext } from 'react';
 import './NodesPanel.scss';
-import {NodesContext} from '../Workspace/Workspace';
+import {NodesContext, SelectionContext} from '../Workspace/Workspace';
 
-function NodesPanel(){
+function NodesPanel({onSelect}){
     const nodes = useContext(NodesContext);
+    const selection = useContext(SelectionContext);
+
+    const handleSelect = (event,nodeId) => {
+        event.preventDefault();
+        onSelect(selection.set(nodeId).clone());
+    };
 
     return (
         <section className="nodes-panel">
@@ -12,7 +18,7 @@ function NodesPanel(){
             </header>
             <ul className="node-list">
                 {nodes && nodes.map(node => (
-                    <li className="node-list__item" key={node.id}>{node.name}</li>
+                    <li className={`node-list__item ${selection.contains(node.id) ? "node-list__item--selected" : ""}`} key={node.id} onClick={(event) => handleSelect(event,node.id)}>{node.name}</li>
                 ))}
             </ul>
         </section>

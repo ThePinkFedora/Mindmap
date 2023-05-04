@@ -3,8 +3,11 @@ import Inspector from '../Inspector/Inspector';
 import Map from '../Map/Map';
 import Sidebar from '../Sidebar/Sidebar';
 import './Workspace.scss';
+import { Selections } from '../../js/nodemaps';
 
 export const NodesContext = createContext(null);
+export const SelectionContext = createContext(null);
+
 
 const nodesData = [
     {
@@ -35,18 +38,25 @@ const nodesData = [
 
 function Workspace() {
     const [nodes, setNodes] = useState(null);
+    const [selection, setSelection] = useState(new Selections());
+
 
     useState(() => {
         setNodes(nodesData);
     }, []);
 
+    const handleSelect = (selection) => {
+        setSelection(selection);
+    };
 
     return (
         <main className="workspace">
             <NodesContext.Provider value={nodes}>
-                <Sidebar />
-                <Map />
-                <Inspector />
+                <SelectionContext.Provider value={selection}>
+                    <Sidebar onSelect={handleSelect} />
+                    <Map />
+                    <Inspector />
+                </SelectionContext.Provider>
             </NodesContext.Provider>
         </main>
     );

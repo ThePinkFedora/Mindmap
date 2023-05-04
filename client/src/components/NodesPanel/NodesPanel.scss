@@ -23,13 +23,14 @@
         padding: 0.5rem 0.75rem;
         cursor: pointer;
 
-        &:hover{
+        &:hover:not(&--selected){
             background-color: colors.$secondary-gray;
         }
 
         &--selected{
             color: colors.$primary-blue;
             background-color: colors.$background-selected;
+
         }
     }
 }

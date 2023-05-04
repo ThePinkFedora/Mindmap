@@ -2,7 +2,7 @@ import NodesPanel from '../NodesPanel/NodesPanel';
 import './Sidebar.scss';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-function Sidebar() {
+function Sidebar({onSelect}) {
     return (
         <section className="sidebar">
             <Tabs>
@@ -15,7 +15,7 @@ function Sidebar() {
                     <h2>Any content 1</h2>
                 </TabPanel>
                 <TabPanel>
-                    <NodesPanel />
+                    <NodesPanel onSelect={onSelect}/>
                 </TabPanel>
 
             </Tabs>
