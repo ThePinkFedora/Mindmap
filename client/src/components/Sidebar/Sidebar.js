@@ -1,3 +1,4 @@
+import NodesPanel from '../NodesPanel/NodesPanel';
 import './Sidebar.scss';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
@@ -14,9 +15,9 @@ function Sidebar() {
                     <h2>Any content 1</h2>
                 </TabPanel>
                 <TabPanel>
-                    <h2>Any content 2</h2>
+                    <NodesPanel />
                 </TabPanel>
-                
+
             </Tabs>
         </section>
     );

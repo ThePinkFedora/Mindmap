@@ -4,7 +4,7 @@ import Map from '../Map/Map';
 import Sidebar from '../Sidebar/Sidebar';
 import './Workspace.scss';
 
-const NodesContext = createContext(null);
+export const NodesContext = createContext(null);
 
 const nodesData = [
     {
