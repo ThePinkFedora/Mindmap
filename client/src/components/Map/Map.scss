@@ -1,7 +1,23 @@
-@use '../../styles/partials/colors';
-@use '../../styles/partials/mixins' as *;
+@use "../../styles/partials/colors";
+@use "../../styles/partials/mixins" as *;
 
-.map{
-    background-color: #091e420f;//colors.$background-dark;
-    width: 100%;
+.map {
+  background-color: #091e420f; //colors.$background-dark;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+
+  &__sheet {
+    background-size: 48px 48px;
+    background-image: linear-gradient(to right, colors.$background-gray 1px, transparent 1px),
+      linear-gradient(to bottom, colors.$background-gray 1px, transparent 1px);
+    //   border: 1px solid colors.$background-gray; 
+    box-shadow: 0 0 5px 5px colors.$background-gray;
+    // position: relative;
+    left: 5rem;
+    top: 5rem;
+    width: 300rem;
+    height: 300rem;
+    z-index: 99;
+  }
 }
