@@ -7,3 +7,24 @@
     @include common-box-shadow;
     min-width: 21.25rem;
 }
+
+.react-tabs{
+    &__tab-list{
+        background-color: colors.$secondary-gray;
+        list-style-type: none;
+        display: flex;
+        padding: 0 0.5rem 0;
+        border-bottom: 1px solid colors.$divider;
+    }
+    &__tab{
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        background-color: colors.$secondary-gray;
+        cursor: pointer;
+
+        &--selected{
+            color: colors.$text-dark;
+            background-color: colors.$background-light;
+        }
+    }
+}
