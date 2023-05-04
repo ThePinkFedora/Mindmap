@@ -1,0 +1,31 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins' as *;
+
+
+.inspector{
+    @include common-box-shadow;
+    min-width: 21.25rem;
+    color: colors.$text-dark;
+    padding: 0.5rem;
+
+    &__header{
+        border-bottom: 1px solid colors.$divider;
+    }
+
+    &__title{
+        text-align: center;
+        @include font-section-header;
+        padding: 0.875rem;
+    }
+
+    &__content{
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    &__field-list{
+        display: flex;
+        flex-direction: column;
+    }
+}

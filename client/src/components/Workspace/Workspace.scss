@@ -1,0 +1,9 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/mixins' as *;
+
+.workspace{
+    background-color: colors.$background-light;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+}

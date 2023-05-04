@@ -1,0 +1,7 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/mixins' as *;
+
+.map{
+    background-color: #091e420f;//colors.$background-dark;
+    width: 100%;
+}

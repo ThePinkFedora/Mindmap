@@ -1,0 +1,9 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/fonts';
+@use '../../styles/partials/mixins' as *;
+
+
+.sidebar{
+    @include common-box-shadow;
+    min-width: 21.25rem;
+}
