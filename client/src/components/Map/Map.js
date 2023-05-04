@@ -1,7 +1,13 @@
+import { useContext } from 'react';
 import './Map.scss';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { NodesContext, SelectionContext } from '../Workspace/Workspace';
 
 function Map() {
+    const nodes = useContext(NodesContext);
+    const selection = useContext(SelectionContext);
+
+
     return (
         <section className="map">
             <TransformWrapper>
