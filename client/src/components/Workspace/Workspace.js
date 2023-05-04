@@ -15,24 +15,24 @@ const nodesData = [
         map_id: 1,
         name: "Flexbox",
         description: `Flexbox is a one-dimensional layout method for arranging items in rows or columns. Items flex (expand) to fill additional space or shrink to fit into smaller spaces. This article explains all the fundamentals.`,
-        x: 100,
-        y: 100
+        x: 300,
+        y: 200
     },
     {
         id: 2,
         map_id: 1,
         name: "justify-content",
         description: `The CSS justify-content property defines how the browser distributes space between and around content items along the main-axis of a flex container, and the inline axis of a grid container.`,
-        x: 200,
-        y: 100
+        x: 550,
+        y: 200
     },
     {
         id: 3,
         map_id: 1,
         name: "align-items",
         description: `The CSS align-items property sets the align-self value on all direct children as a group. In Flexbox, it controls the alignment of items on the Cross Axis. In Grid Layout, it controls the alignment of items on the Block Axis within their grid area.`,
-        x: 300,
-        y: 100
+        x: 700,
+        y: 300
     },
 ];
 
@@ -46,7 +46,7 @@ function Workspace() {
     }, []);
 
     const handleSelect = (selection) => {
-        setSelection(selection);
+        setSelection(selection.clone());
     };
 
     return (
@@ -54,7 +54,7 @@ function Workspace() {
             <NodesContext.Provider value={nodes}>
                 <SelectionContext.Provider value={selection}>
                     <Sidebar onSelect={handleSelect} />
-                    <Map />
+                    <Map onSelect={handleSelect}/>
                     <Inspector />
                 </SelectionContext.Provider>
             </NodesContext.Provider>

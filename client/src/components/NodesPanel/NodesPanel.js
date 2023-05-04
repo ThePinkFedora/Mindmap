@@ -8,7 +8,7 @@ function NodesPanel({onSelect}){
 
     const handleSelect = (event,nodeId) => {
         event.preventDefault();
-        onSelect(selection.set(nodeId).clone());
+        onSelect(selection.set(nodeId));
     };
 
     return (
