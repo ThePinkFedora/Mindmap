@@ -1,4 +1,6 @@
 @use './colors';
+@use './fonts' as *;
+
 
 @mixin common-box-shadow(){
     box-shadow: 0px 0px 5px 5px #091E422F;
@@ -21,5 +23,19 @@
 
     &:placeholder{
         color: colors.$text-subtle;
+    }
+}
+
+
+@mixin button{
+    @include font-button;
+    background-color: colors.$background-neutral-gray;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    padding: 0.375rem 0.75rem;
+
+    &:hover{
+        background-color: colors.$background-neutral-gray-hovered;
     }
 }

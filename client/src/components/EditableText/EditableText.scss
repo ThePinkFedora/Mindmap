@@ -1,0 +1,47 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/fonts' as *;
+
+
+.editable-text{
+    // width: auto;
+    width: 100%;
+
+
+    &__text{
+        @include font-field;
+        width: 100%;
+
+        &--line{
+            @include font-label;
+        }
+    }
+
+    &__textarea{
+        @include font-field;
+        color: colors.$text-dark;
+        background-color: colors.$background-neutral-gray;
+        border: none;
+        border-radius: 0.25rem;
+        resize: vertical;
+        outline: none;
+        padding: 0.5rem;
+        width: 100%;
+
+        &--hidden{
+            display: none;
+        }
+
+        &--line{
+            @include font-label;
+            white-space: nowrap;
+            padding: 0.25rem 0.5rem;
+            height: 1.5lh;
+            resize: none;
+            overflow: hidden;
+        }
+
+        &::placeholder{
+            color: colors.$text-dark;
+        }
+    }
+}

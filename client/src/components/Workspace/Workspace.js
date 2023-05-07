@@ -59,7 +59,7 @@ function Workspace() {
                 <SelectionContext.Provider value={selection}>
                     <Sidebar onSelect={handleSelect} />
                     <Map onSelect={handleSelect} onUpdate={handleUpdate}/>
-                    <Inspector />
+                    <Inspector onUpdate={handleUpdate}/>
                 </SelectionContext.Provider>
             </NodesContext.Provider>
         </main>
