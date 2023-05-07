@@ -92,6 +92,7 @@ function Workspace() {
     };
 
     const handleDelete = () => {
+        console.log("handleDelete");
         setNodes(nodes.filter(node => !selection.contains(node.id)));
         handleSelect(selection.clear());
     };
@@ -102,10 +103,8 @@ function Workspace() {
     };
 
     const handleUnlink = (link_id) => {
-        deleteLink(null, link_id).then(res => { retrieveLinks(); });
+        deleteLink(null, link_id).then(res => { retrieveLinks();  });
     };
-
-    console.log({ links });
 
     return (
         <main className="workspace">

@@ -82,7 +82,7 @@ function Map({ onSelect, onUpdate,onAdd,onDelete,onLink,onUnlink }) {
      * @param {KeyboardEvent} event 
      */
     const handleKeyDown = (event) => {
-        console.log("HandleKeyDown",event.key);
+        // console.log("HandleKeyDown",event.key);
         switch(event.key){
             case "x": onDelete(); break;
             case "n": 
@@ -113,7 +113,7 @@ function Map({ onSelect, onUpdate,onAdd,onDelete,onLink,onUnlink }) {
 
 
     return (
-        <section className="map" tabIndex="0" onKeyDown={handleKeyDown} >
+        <section className="map"  >
             <TransformWrapper panning={{ disabled: draggingID !== null }}>
                 <TransformComponent wrapperStyle={{ width: "100%", height: "100%", }}  >
                     <div className="map__sheet" ref={pageRef} tabIndex="0" onClick={handleBackgroundClick} onMouseMove={handleMouseMove} onKeyDown={handleKeyDown}>

@@ -32,7 +32,11 @@ function Inspector({ onUpdate }) {
     },[selections]);
 
     const handleChange = ({name,value},field_id) => {
-        if (field_id === "description") {
+        if(field_id === "name"){
+            const node = selectedNodes[0];
+            node.name = value;
+            onUpdate(node);
+        }else if (field_id === "description") {
             const node = selectedNodes[0];
             node.description = value;
             onUpdate(node);
@@ -56,7 +60,7 @@ function Inspector({ onUpdate }) {
             <header className="inspector__header">
                 <h1 className="inspector__title">{selectedNodes.length === 0
                     ? "Inspector"
-                    : selectedNodes.length === 1 ? <input type="text" name="name" className="inspector__title-field" value={selectedNodes[0].name} />
+                    : selectedNodes.length === 1 ? <input type="text" name="name" className="inspector__title-field" value={selectedNodes[0].name} onChange={(event)=>handleChange({name:event.target.name,value:event.target.value},"name")} />
                         : `${selectedNodes.length} Nodes`}</h1>
             </header>
             <div className="inspector__content">
