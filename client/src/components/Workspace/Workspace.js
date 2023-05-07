@@ -49,12 +49,16 @@ function Workspace() {
         setSelection(selection.clone());
     };
 
+    const handleUpdate = (node) => {
+        setNodes(nodes.filter(n => n.id !== node.id).concat([node]));
+    };
+
     return (
         <main className="workspace">
             <NodesContext.Provider value={nodes}>
                 <SelectionContext.Provider value={selection}>
                     <Sidebar onSelect={handleSelect} />
-                    <Map onSelect={handleSelect}/>
+                    <Map onSelect={handleSelect} onUpdate={handleUpdate}/>
                     <Inspector />
                 </SelectionContext.Provider>
             </NodesContext.Provider>
