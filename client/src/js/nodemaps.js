@@ -80,6 +80,12 @@ export class Selections {
   contains(id) {
     return this.ids.includes(id);
   }
+
+  /** Clears selections */
+  clear(){
+    this.ids = [];
+    return this;
+  }
   /**
    * @returns {Selections}
    */

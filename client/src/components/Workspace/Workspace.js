@@ -4,6 +4,8 @@ import Map from '../Map/Map';
 import Sidebar from '../Sidebar/Sidebar';
 import './Workspace.scss';
 import { Selections } from '../../js/nodemaps';
+import Tools from '../Tools/Tools';
+import { deleteLink, getLinks, postLink } from '../../js/api';
 
 export const NodesContext = createContext(null);
 export const LinksContext = createContext(null);
@@ -60,9 +62,12 @@ function Workspace() {
         setNodes(nodesData);
     }, []);
 
-    useState(()=>{
-        setLinks(linksData);
-    },[]);
+    useState(() => {
+        if (links === null) {
+            getLinks(null)
+                .then(links => setLinks(links));
+        }
+    }, [links]);
 
     const handleSelect = (selection) => {
         setSelection(selection.clone());
@@ -72,6 +77,33 @@ function Workspace() {
         setNodes(nodes.filter(n => n.id !== node.id).concat([node]));
     };
 
+    const handleAdd = () => {
+        const newNode = {
+            id: nodesData.length+1,
+            map_id: 1,
+            name: "",
+            description: "",
+            x: 500,
+            y: 500
+        };
+        setNodes([...nodes,newNode]);
+    };
+
+    const handleDelete = () => {
+        setNodes(nodes.filter(node => !selection.contains(node.id)));
+        handleSelect(selection.clear());
+    };
+
+    const handleLink = (node_a_id, node_b_id) => {
+        postLink(null, node_a_id, node_b_id)
+            .then(link => setLinks([...links, link]))
+    };
+
+    const handleUnlink = (link_id) => {
+        deleteLink(null, link_id).then(res => { setLinks(null) });
+    };
+
+
     return (
         <main className="workspace">
             <NodesContext.Provider value={nodes}>
@@ -80,6 +112,7 @@ function Workspace() {
                         <Sidebar onSelect={handleSelect} />
                         <Map onSelect={handleSelect} onUpdate={handleUpdate} />
                         <Inspector onUpdate={handleUpdate} />
+                        <Tools onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
                     </SelectionContext.Provider>
                 </LinksContext.Provider>
             </NodesContext.Provider>

@@ -23,6 +23,42 @@ const fieldsData = [
     },
 ];
 
+const linksData = [
+    {
+        id: 1,
+        node_a_id: 1,
+        node_b_id: 2,
+    },
+    {
+        id: 2,
+        node_a_id: 1,
+        node_b_id: 3,
+    },
+];
+
+export async function getLinks(map_id){
+    await new Promise((resolve,reject) => setTimeout(resolve,500));
+    return linksData;
+}
+
+
+export async function postLink(map_id,node_a_id,node_b_id){
+    await new Promise((resolve,reject) => setTimeout(resolve,500));
+    const link = {
+        id: linksData.length+1,
+        node_a_id,
+        node_b_id
+    };
+    linksData.push(link);
+    return link;
+}
+
+export async function deleteLink(map_id,link_id){
+    await new Promise((resolve,reject) => setTimeout(resolve,500));
+    linksData.splice(linksData.findIndex(link => link.id===link_id));
+    return true;
+}
+
 export async function getFields(map_id,node_id){
     await new Promise((resolve,reject) => setTimeout(resolve,500));
     return fieldsData;

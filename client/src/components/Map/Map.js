@@ -58,7 +58,7 @@ function Map({ onSelect, onUpdate }) {
             if (draggingID) {
                 // event.preventDefault();
                 event.stopPropagation();
-                console.log(event);
+                // console.log(event);
 
                 const node = nodes.find(node => node.id === draggingID);
                 const { clientX, clientY } = event;

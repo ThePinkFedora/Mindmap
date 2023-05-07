@@ -38,4 +38,10 @@
     &:hover{
         background-color: colors.$background-neutral-gray-hovered;
     }
+
+    &:disabled{
+        color: colors.$text-subtle;
+        background-color: colors.$background-gray;
+        cursor: default;
+    }
 }
