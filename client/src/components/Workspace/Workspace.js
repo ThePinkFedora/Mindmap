@@ -63,11 +63,13 @@ function Workspace() {
     }, []);
 
     useState(() => {
-        if (links === null) {
-            getLinks(null)
-                .then(links => setLinks(links));
-        }
-    }, [links]);
+        retrieveLinks();
+    }, []);
+
+    function retrieveLinks() {
+        getLinks(null)
+            .then(links => setLinks(links));
+    }
 
     const handleSelect = (selection) => {
         setSelection(selection.clone());
@@ -77,16 +79,16 @@ function Workspace() {
         setNodes(nodes.filter(n => n.id !== node.id).concat([node]));
     };
 
-    const handleAdd = () => {
+    const handleAdd = (x=500,y=500) => {
         const newNode = {
-            id: nodesData.length+1,
+            id: nodesData.length + 1,
             map_id: 1,
             name: "",
             description: "",
-            x: 500,
-            y: 500
+            x,
+            y
         };
-        setNodes([...nodes,newNode]);
+        setNodes([...nodes, newNode]);
     };
 
     const handleDelete = () => {
@@ -100,9 +102,10 @@ function Workspace() {
     };
 
     const handleUnlink = (link_id) => {
-        deleteLink(null, link_id).then(res => { setLinks(null) });
+        deleteLink(null, link_id).then(res => { retrieveLinks(); });
     };
 
+    console.log({ links });
 
     return (
         <main className="workspace">
@@ -110,7 +113,7 @@ function Workspace() {
                 <LinksContext.Provider value={links}>
                     <SelectionContext.Provider value={selection}>
                         <Sidebar onSelect={handleSelect} />
-                        <Map onSelect={handleSelect} onUpdate={handleUpdate} />
+                        <Map onSelect={handleSelect} onUpdate={handleUpdate} onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
                         <Inspector onUpdate={handleUpdate} />
                         <Tools onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
                     </SelectionContext.Provider>

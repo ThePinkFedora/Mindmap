@@ -25,11 +25,12 @@ function Tools({ onAdd, onDelete, onLink, onUnlink }) {
     };
 
     const handleLink = (event) => {
-        onLink(selection.ids[0],selection.ids[1]);
+        onLink(selection.ids[0], selection.ids[1]);
     };
 
     const handleUnlink = (event) => {
-        onUnlink(selection.ids[0],selection.ids[1]);
+        const link = links.find(link => selection.contains(link.node_a_id) && selection.contains(link.node_b_id));
+        onUnlink(link.id);
     };
 
     return (
@@ -51,12 +52,12 @@ function Tools({ onAdd, onDelete, onLink, onUnlink }) {
                             </button>
                         </li>
                         <li className="tools__item">
-                            <button className='tools__button' onClick={handleLink} disabled={selection.length!==2}>
+                            <button className='tools__button' onClick={handleLink} disabled={selection.length !== 2}>
                                 Link
                             </button>
                         </li>
                         <li className="tools__item">
-                            <button className='tools__button' onClick={handleUnlink} disabled={selection.length!==2}>
+                            <button className='tools__button' onClick={handleUnlink} disabled={selection.length !== 2}>
                                 Unlink
                             </button>
                         </li>

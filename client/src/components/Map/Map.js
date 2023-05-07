@@ -14,14 +14,14 @@ const nodeSize = 48;
  * @param {(selections:Selections)=>{}} props.onSelect
  * @returns 
  */
-function Map({ onSelect, onUpdate }) {
+function Map({ onSelect, onUpdate,onAdd,onDelete,onLink,onUnlink }) {
     const nodes = useContext(NodesContext);
     const links = useContext(LinksContext);
     /** @type {Selections} */
     const selection = useContext(SelectionContext);
     const [draggingID, setDraggingID] = useState(null);
     const pageRef = useRef(null);
-    const transformWrapperRef = useRef(null);
+    const mouseRef = useRef({x:0,y:0});
 
 
 
@@ -31,7 +31,8 @@ function Map({ onSelect, onUpdate }) {
      */
     const handleNodeClick = (event, nodeId) => {
         event.stopPropagation();
-        onSelect(selection.set(nodeId));
+        onSelect(event.ctrlKey ? selection.toggle(nodeId): selection.set(nodeId));
+        
     };
 
     /**
@@ -54,6 +55,7 @@ function Map({ onSelect, onUpdate }) {
      * @param {import('react').MouseEvent} event 
      */
     const handleMouseMove = (event) => {
+        mouseRef.current = {x:event.clientX,y:event.clientY};
         if (event.buttons === 1) {
             if (draggingID) {
                 // event.preventDefault();
@@ -74,41 +76,48 @@ function Map({ onSelect, onUpdate }) {
         }
     };
 
-    const handleNodeDrag = (event, nodeId) => {
-        // event.stopPropagation();
-        // console.log(event);
+    const handleNodeDrag = (event, nodeId) => {};
 
-        // const node = nodes.find(node => node.id === nodeId);
-        // const { clientX, clientY } = event;
-        // const { offsetLeft, offsetTop } = pageRef.current;
-        // const { clientLeft, clientTop } = pageRef.current;
-        // const rect = pageRef.current.getBoundingClientRect();
-        // console.log(rect);
-
-        // console.log("NewPos: ", { x: clientX - rect.x, y: clientY -rect.y });
-        // console.log("OldPos: ", { x: node.x, y: node.y });
-
-        // node.x = clientX - rect.x;
-        // node.y = clientY - rect.y;
-        // onUpdate(node);
+    /**
+     * @param {KeyboardEvent} event 
+     */
+    const handleKeyDown = (event) => {
+        console.log("HandleKeyDown",event.key);
+        switch(event.key){
+            case "x": onDelete(); break;
+            case "n": 
+                const rect = pageRef.current.getBoundingClientRect();
+                const x = mouseRef.current.x - rect.x - nodeSize / 2;
+                const y = mouseRef.current.y - rect.y - nodeSize / 2;
+                onAdd(x,y); 
+                console.log("n");
+                break;
+            case "l": 
+                if(selection.length===2){
+                    const linkNodes = selection.findAll(nodes);
+                    onLink(linkNodes[0],linkNodes[1]);
+                }
+                break;
+            case "u": 
+                if(selection.length===2){
+                    const link = links.find(link => selection.contains(link.node_a_id) && selection.contains(link.node_b_id));
+                    onUnlink(link.id);
+                }
+                break;
+            
+        }
     };
-
-    // console.log(transformWrapperRef.current);
-
-
-
-    // console.log({ draggingID });
 
     const lines = (links !== null && nodes!=null) ? Lines.createLines(nodeSize,links,nodes) : [];
 
 
 
     return (
-        <section className="map" >
+        <section className="map" tabIndex="0" onKeyDown={handleKeyDown} >
             <TransformWrapper panning={{ disabled: draggingID !== null }}>
-                <TransformComponent ref={transformWrapperRef} wrapperStyle={{ width: "100%", height: "100%", }}>
-                    <div className="map__sheet" ref={pageRef} onClick={handleBackgroundClick} onMouseMove={handleMouseMove} >
-                        {lines.map(line => <Line start={{ x: line.startX, y: line.startY }} end={{ x: line.endX, y: line.endY }} />)}
+                <TransformComponent wrapperStyle={{ width: "100%", height: "100%", }}  >
+                    <div className="map__sheet" ref={pageRef} tabIndex="0" onClick={handleBackgroundClick} onMouseMove={handleMouseMove} onKeyDown={handleKeyDown}>
+                        {lines.map((line,index) => <Line key={index} start={{ x: line.startX, y: line.startY }} end={{ x: line.endX, y: line.endY }} />)}
                         {nodes && nodes.map(node => (
                             <Node
                                 key={node.id}

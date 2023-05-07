@@ -38,7 +38,7 @@ const linksData = [
 
 export async function getLinks(map_id){
     await new Promise((resolve,reject) => setTimeout(resolve,500));
-    return linksData;
+    return [...linksData];
 }
 
 
@@ -54,8 +54,12 @@ export async function postLink(map_id,node_a_id,node_b_id){
 }
 
 export async function deleteLink(map_id,link_id){
+    console.log("DeleteLink",link_id);
     await new Promise((resolve,reject) => setTimeout(resolve,500));
-    linksData.splice(linksData.findIndex(link => link.id===link_id));
+    const index = linksData.findIndex(link => link.id===link_id);
+    console.log(index);
+    if(index===-1)return false;
+    linksData.splice(index,1);
     return true;
 }
 
