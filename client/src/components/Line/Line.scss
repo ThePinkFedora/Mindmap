@@ -1,0 +1,19 @@
+.line{
+    // border: 1px solid red;
+    position: absolute;
+    top:0;
+    left:0;
+    // width: 500px;
+    // height: 500px;
+    // width: 100vw;
+    // height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+
+    path{
+        fill: none;
+        stroke: cyan;
+        stroke-width: 2px;
+        vector-effect: non-scaling-stroke;
+    }
+}

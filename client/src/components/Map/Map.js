@@ -1,10 +1,11 @@
 import { useContext, useState } from 'react';
 import './Map.scss';
-import { TransformWrapper, TransformComponent,useTransformContext } from "react-zoom-pan-pinch";
-import { NodesContext, SelectionContext } from '../Workspace/Workspace';
+import { TransformWrapper, TransformComponent, useTransformContext } from "react-zoom-pan-pinch";
+import { LinksContext, NodesContext, SelectionContext } from '../Workspace/Workspace';
 import Node from '../Node/Node';
-import { Selections } from '../../js/nodemaps';
+import { Selections, Lines,LineObject } from '../../js/nodemaps';
 import { useRef } from 'react';
+import Line from '../Line/Line';
 
 const nodeSize = 48;
 
@@ -15,13 +16,14 @@ const nodeSize = 48;
  */
 function Map({ onSelect, onUpdate }) {
     const nodes = useContext(NodesContext);
+    const links = useContext(LinksContext);
     /** @type {Selections} */
     const selection = useContext(SelectionContext);
     const [draggingID, setDraggingID] = useState(null);
     const pageRef = useRef(null);
     const transformWrapperRef = useRef(null);
-    
-    
+
+
 
     /**
      * @param {import('react').MouseEvent} event 
@@ -62,9 +64,9 @@ function Map({ onSelect, onUpdate }) {
                 const { clientX, clientY } = event;
 
                 const rect = pageRef.current.getBoundingClientRect();
-                
-                node.x = clientX - rect.x - nodeSize/2;
-                node.y = clientY - rect.y - nodeSize/2;
+
+                node.x = clientX - rect.x - nodeSize / 2;
+                node.y = clientY - rect.y - nodeSize / 2;
                 onUpdate(node);
             }
         } else if (draggingID) {
@@ -82,7 +84,7 @@ function Map({ onSelect, onUpdate }) {
         // const { clientLeft, clientTop } = pageRef.current;
         // const rect = pageRef.current.getBoundingClientRect();
         // console.log(rect);
-        
+
         // console.log("NewPos: ", { x: clientX - rect.x, y: clientY -rect.y });
         // console.log("OldPos: ", { x: node.x, y: node.y });
 
@@ -93,15 +95,20 @@ function Map({ onSelect, onUpdate }) {
 
     // console.log(transformWrapperRef.current);
 
-    
+
 
     // console.log({ draggingID });
+
+    const lines = (links !== null && nodes!=null) ? Lines.createLines(nodeSize,links,nodes) : [];
+
+
 
     return (
         <section className="map" >
             <TransformWrapper panning={{ disabled: draggingID !== null }}>
                 <TransformComponent ref={transformWrapperRef} wrapperStyle={{ width: "100%", height: "100%", }}>
                     <div className="map__sheet" ref={pageRef} onClick={handleBackgroundClick} onMouseMove={handleMouseMove} >
+                        {lines.map(line => <Line start={{ x: line.startX, y: line.startY }} end={{ x: line.endX, y: line.endY }} />)}
                         {nodes && nodes.map(node => (
                             <Node
                                 key={node.id}
@@ -112,6 +119,7 @@ function Map({ onSelect, onUpdate }) {
                                 onDrag={(event) => handleNodeDrag(event, node.id)}
                             />
                         ))}
+
                     </div>
                 </TransformComponent>
             </TransformWrapper>

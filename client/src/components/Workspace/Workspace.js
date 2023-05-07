@@ -6,6 +6,7 @@ import './Workspace.scss';
 import { Selections } from '../../js/nodemaps';
 
 export const NodesContext = createContext(null);
+export const LinksContext = createContext(null);
 export const SelectionContext = createContext(null);
 
 
@@ -36,14 +37,32 @@ const nodesData = [
     },
 ];
 
+const linksData = [
+    {
+        id: 1,
+        node_a_id: 1,
+        node_b_id: 2,
+    },
+    {
+        id: 2,
+        node_a_id: 1,
+        node_b_id: 3,
+    },
+];
+
 function Workspace() {
     const [nodes, setNodes] = useState(null);
+    const [links, setLinks] = useState(null);
     const [selection, setSelection] = useState(new Selections());
 
 
     useState(() => {
         setNodes(nodesData);
     }, []);
+
+    useState(()=>{
+        setLinks(linksData);
+    },[]);
 
     const handleSelect = (selection) => {
         setSelection(selection.clone());
@@ -56,11 +75,13 @@ function Workspace() {
     return (
         <main className="workspace">
             <NodesContext.Provider value={nodes}>
-                <SelectionContext.Provider value={selection}>
-                    <Sidebar onSelect={handleSelect} />
-                    <Map onSelect={handleSelect} onUpdate={handleUpdate}/>
-                    <Inspector onUpdate={handleUpdate}/>
-                </SelectionContext.Provider>
+                <LinksContext.Provider value={links}>
+                    <SelectionContext.Provider value={selection}>
+                        <Sidebar onSelect={handleSelect} />
+                        <Map onSelect={handleSelect} onUpdate={handleUpdate} />
+                        <Inspector onUpdate={handleUpdate} />
+                    </SelectionContext.Provider>
+                </LinksContext.Provider>
             </NodesContext.Provider>
         </main>
     );

@@ -27,27 +27,8 @@
         @include font-label;
     }
 
-    // &__title-field{
-        
-
-    //     &__paragraph{
-    //         @include font-label;
-    //     }
-
-    //     &__textarea{
-    //         @include font-label;
-    //         white-space: nowrap;
-    //         height: 1.5lh;
-    //     }
-    // }
-
     &__content{
         margin-left: 2.5rem;
         
     }
-
-    &__textarea{
-
-    }
-
 }

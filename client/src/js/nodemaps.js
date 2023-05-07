@@ -2,7 +2,6 @@ import textIcon from '../assets/images/description.svg';
 import checkIcon from '../assets/images/checkbox2.svg';
 import attachIcon from '../assets/images/attachment.svg';
 
-
 function getUniqueValues(array) {
   return Array.from(new Set(array));
 }
@@ -104,7 +103,7 @@ export class Fields {
       alt: "link"
     }
   }
-  static get eachType(){
+  static get eachType() {
     return [
       {
         name: "Text",
@@ -124,7 +123,7 @@ export class Fields {
         icon: this.icons.attachment.icon,
         alt: this.icons.attachment.alt
       },
-      
+
     ];
   }
 }
@@ -134,4 +133,24 @@ export class Field {
   type;
   name;
   value;
+}
+
+export class Lines {
+  static createLines(nodeSize,links,nodes) {
+    return links.map(link => {
+      const a = nodes.find(node => node.id === link.node_a_id);
+      const b = nodes.find(node => node.id === link.node_b_id);
+      return new LineObject(a.x + nodeSize / 2, a.y + nodeSize / 2, b.x + nodeSize / 2, b.y + nodeSize / 2);
+    })
+  }
+}
+
+export class LineObject {
+  startX;
+  startY;
+  endX;
+  endX;
+  constructor(startX, startY, endX, endY) {
+    [this.startX, this.startY, this.endX, this.endY] = [startX, startY, endX, endY];
+  }
 }
