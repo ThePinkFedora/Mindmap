@@ -31,7 +31,7 @@ export async function getFields(map_id,node_id){
 export async function addField(map_id,node_id,type){
     await new Promise((resolve,reject) => setTimeout(resolve,500));
     const field = {
-        id: fieldsData.length,
+        id: fieldsData.length+1,
         node_id: node_id,
         type: type,
         name: "",

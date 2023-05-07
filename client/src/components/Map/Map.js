@@ -91,11 +91,11 @@ function Map({ onSelect, onUpdate }) {
         // onUpdate(node);
     };
 
-    console.log(transformWrapperRef.current);
+    // console.log(transformWrapperRef.current);
 
     
 
-    console.log({ draggingID });
+    // console.log({ draggingID });
 
     return (
         <section className="map" >

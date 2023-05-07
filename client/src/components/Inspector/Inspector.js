@@ -31,9 +31,7 @@ function Inspector({ onUpdate }) {
         setFields(null);
     },[selections]);
 
-    const handleChange = ({name,value,prevName},field_id) => {
-        console.log(`handleChange`,{name,value,prevName,field_id});
-
+    const handleChange = ({name,value},field_id) => {
         if (field_id === "description") {
             const node = selectedNodes[0];
             node.description = value;
@@ -41,7 +39,7 @@ function Inspector({ onUpdate }) {
         }else{
             updateField(null,null,field_id,{name,value})
                 .then(field => {
-
+                    setFields(null);
                 });
         }
     };

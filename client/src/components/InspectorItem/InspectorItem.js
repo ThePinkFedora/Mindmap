@@ -38,14 +38,11 @@ function InspectorItem({type,name,value,disableRename=false,onChange}){
     const {icon,iconAlt} = Fields.icons[type];
 
     const handleNameChange = (newValue)=>{
-        console.log("handleNameChange",newValue);
-        // const {value} = event.target;
-        onChange({name:newValue,prevName:name,value:value});
+        onChange({name:newValue,value:value});
     };
 
     const handleValueChange = (newValue) => {
-        // const {value} = event.target;
-        onChange({name:name,prevName:name,value:newValue});
+        onChange({name:name,value:newValue});
     };
 
     return (
