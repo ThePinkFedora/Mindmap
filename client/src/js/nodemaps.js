@@ -30,6 +30,10 @@ export class Selections {
    * @returns {Selections} - this
   */
   add(id) {
+    if(Array.isArray(id)){
+      id.forEach(id => this.add(id));
+      return this;
+    }
     this.ids = getUniqueValues([...this.ids, id]);
     return this;
   }
@@ -38,6 +42,10 @@ export class Selections {
    * @returns {Selections} - this
   */
   remove(id) {
+    if(Array.isArray(id)){
+      id.forEach(id => this.remove(id));
+      return this;
+    }
     this.ids = this.ids.filter(idEl => idEl != id);
     return this;
   }
@@ -48,12 +56,15 @@ export class Selections {
   toggle(id) {
     return this.contains(id) ? this.remove(id) : this.add(id);
   }
+  
   /**
    * @param {string} id 
    * @returns {Selections} - this
   */
   set(id) {
-    this.ids = id ? [id] : [];
+    this.ids = !id ? []
+      : Array.isArray(id) ? [...id]
+      : [id];
     return this;
   }
   /**
@@ -175,6 +186,10 @@ export class Links {
 
   static findNodes(links,nodes){
     return nodes.filter(node => [links.node_a_id,links.node_b_id].includes(node.id));
+  }
+
+  static createLinkName(link,nodes){
+    return `${nodes.find(node=>node.id===link.node_a_id).name} - ${nodes.find(node=>node.id===link.node_b_id).name}`;
   }
 }
 
