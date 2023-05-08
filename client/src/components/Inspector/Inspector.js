@@ -3,7 +3,7 @@ import './Inspector.scss';
 import { NodesContext, SelectionContext } from '../Workspace/Workspace';
 import { Selections, Fields } from '../../js/nodemaps';
 import InspectorItem from '../InspectorItem/InspectorItem';
-import { createField, getFields,updateField } from '../../js/api';
+import { createField, deleteField, getFields, updateField } from '../../js/api';
 
 
 /**
@@ -25,23 +25,23 @@ function Inspector({ onUpdate }) {
                     setFields(fields);
                 });
         }
-    }, [fields,selections.length]);
+    }, [fields, selections.length]);
 
-    useEffect(()=>{
+    useEffect(() => {
         setFields(null);
-    },[selections]);
+    }, [selections]);
 
-    const handleChange = ({name,value},field_id) => {
-        if(field_id === "name"){
+    const handleChange = ({ name, value }, field_id) => {
+        if (field_id === "name") {
             const node = selectedNodes[0];
             // node.name = value;
-            onUpdate({...node,name:value});
-        }else if (field_id === "description") {
+            onUpdate({ ...node, name: value });
+        } else if (field_id === "description") {
             const node = selectedNodes[0];
             // node.description = value;
-            onUpdate({...node,description:value});
-        }else{
-            updateField(1,selections.ids[0],field_id,{name,value})
+            onUpdate({ ...node, description: value });
+        } else {
+            updateField(1, selections.ids[0], field_id, { name, value })
                 .then(field => {
                     setFields(null);
                 });
@@ -55,23 +55,40 @@ function Inspector({ onUpdate }) {
             });
     };
 
+    const handleDelete = (field_id) => {
+        deleteField(1,selectedNodes[0].id,field_id)
+            .then(res => setFields(fields.filter(field=>field.id!==field_id)));
+    };
+
     return (
         <section className="inspector">
             <header className="inspector__header">
                 <h1 className="inspector__title">{selectedNodes.length === 0
                     ? "Inspector"
-                    : selectedNodes.length === 1 ? <input type="text" name="name" className="inspector__title-field" value={selectedNodes[0].name} onChange={(event)=>handleChange({name:event.target.name,value:event.target.value},"name")} />
+                    : selectedNodes.length === 1 ? <input type="text" name="name" className="inspector__title-field" value={selectedNodes[0].name} onChange={(event) => handleChange({ name: event.target.name, value: event.target.value }, "name")} />
                         : `${selectedNodes.length} Nodes`}</h1>
             </header>
             <div className="inspector__content">
                 <ul className="inspector__field-list">
                     {selectedNodes.length === 1 && <>
                         <li className="inspector__field-item">
-                            <InspectorItem type="text" name="Description" value={selectedNodes[0].description} disableRename={true} onChange={changeData=>handleChange(changeData,"description")} />
+                            <InspectorItem
+                                type="text"
+                                name="Description"
+                                value={selectedNodes[0].description}
+                                disableRename={true}
+                                onChange={changeData => handleChange(changeData, "description")}
+                            />
                         </li>
                         {fields && fields.map(field => (
                             <li key={field.id} className="inspector__field-item">
-                                <InspectorItem type={field.type} name={field.name} value={field.value} onChange={changeData=>handleChange(changeData,field.id)} />
+                                <InspectorItem
+                                    type={field.type}
+                                    name={field.name}
+                                    value={field.value}
+                                    onChange={changeData => handleChange(changeData, field.id)}
+                                    onDelete={() => handleDelete(field.id)}
+                                />
                             </li>
                         ))}
                     </>}

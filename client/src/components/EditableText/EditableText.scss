@@ -26,6 +26,7 @@
         outline: none;
         padding: 0.5rem;
         width: 100%;
+        min-height: 8rem;
 
         &--hidden{
             display: none;
@@ -38,6 +39,7 @@
             height: 1.5lh;
             resize: none;
             overflow: hidden;
+            min-height: unset;
         }
 
         &::placeholder{

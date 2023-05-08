@@ -29,7 +29,7 @@ import { Fields } from '../../js/nodemaps';
  * @param {(changeData:{name:string, value: string, prevName:string}) => {}} props.onChange
  * @returns 
  */
-function InspectorItem({type,name,value,disableRename=false,onChange}){
+function InspectorItem({type,name,value,disableRename=false,onChange,onDelete}){
 
     if(!Fields.icons[type]){
         return <h3>Invalid type {type?.toString() || typeof type}</h3>
@@ -45,6 +45,8 @@ function InspectorItem({type,name,value,disableRename=false,onChange}){
         onChange({name:name,value:newValue});
     };
 
+   
+
     return (
         <div className="inspector-item">
             <div className="inspector-item__header">
@@ -53,7 +55,7 @@ function InspectorItem({type,name,value,disableRename=false,onChange}){
                     ? <h2 className="inspector-item__title">{name}</h2>
                     : <EditableText type="line" name={name+"Name"} value={name} onEndEdit={handleNameChange}/>
                 }
-                {/* <h2 className="inspector-item__title">{name || "Field"}</h2> */}
+                {onDelete && <button className="inspector-item__button" onClick={onDelete}>Delete</button> }
             </div>
             <div className="inspector-item__content">
                 {type === "text" 
