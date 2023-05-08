@@ -3,7 +3,7 @@ import './Inspector.scss';
 import { NodesContext, SelectionContext } from '../Workspace/Workspace';
 import { Selections, Fields } from '../../js/nodemaps';
 import InspectorItem from '../InspectorItem/InspectorItem';
-import { addField, getFields,updateField } from '../../js/api';
+import { createField, getFields,updateField } from '../../js/api';
 
 
 /**
@@ -20,7 +20,7 @@ function Inspector({ onUpdate }) {
 
     useEffect(() => {
         if (fields === null && selections.length) {
-            getFields(null, null)
+            getFields(1, selections.ids[0])
                 .then(fields => {
                     setFields(fields);
                 });
@@ -34,14 +34,14 @@ function Inspector({ onUpdate }) {
     const handleChange = ({name,value},field_id) => {
         if(field_id === "name"){
             const node = selectedNodes[0];
-            node.name = value;
-            onUpdate(node);
+            // node.name = value;
+            onUpdate({...node,name:value});
         }else if (field_id === "description") {
             const node = selectedNodes[0];
-            node.description = value;
-            onUpdate(node);
+            // node.description = value;
+            onUpdate({...node,description:value});
         }else{
-            updateField(null,null,field_id,{name,value})
+            updateField(1,selections.ids[0],field_id,{name,value})
                 .then(field => {
                     setFields(null);
                 });
@@ -49,7 +49,7 @@ function Inspector({ onUpdate }) {
     };
 
     const handleAddField = (type) => {
-        addField(null, selectedNodes[0].id, type)
+        createField(null, selectedNodes[0].id, type)
             .then(field => {
                 setFields(null); ///Force fields to reload
             });

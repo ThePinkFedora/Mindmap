@@ -1,91 +1,184 @@
+import axios from 'axios';
 
-const fieldsData = [
-    {
-        id: 1,
-        node_id: 1,
-        type: "text",
-        name: "Usage",
-        value: "CSS Layout"
-    },
-    {
-        id: 2,
-        node_id: 1,
-        type: "checklist",
-        name: "TODO",
-        value: "Text element value"
-    },
-    {
-        id: 3,
-        node_id: 1,
-        type: "attachment",
-        name: "MDN Resource",
-        value: "https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox"
-    },
-];
+const config = {
+    baseUrl: process.env.REACT_APP_BASE_URL
+}
 
-const linksData = [
-    {
-        id: 1,
-        node_a_id: 1,
-        node_b_id: 2,
-    },
-    {
-        id: 2,
-        node_a_id: 1,
-        node_b_id: 3,
-    },
-];
+/**
+ * GET /maps/:mapId/nodes
+ * @param {*} map_id 
+ * @returns {Promise<object[]>}
+ */
+export async function getNodes(map_id){
+    try{
+        const response = await axios.get(`${config.baseUrl}/maps/${map_id}/nodes`);
+        return response.data.results;
+    }catch(error){
+        console.error("Error during getNodes");
+        throw error;
+    }
+}
 
+/**
+ * POST /maps/:mapId/nodes
+ * @param {*} map_id 
+ * @returns {Promise<object>}
+ */
+export async function createNode(map_id){
+    try{
+        const response = await axios.post(`${config.baseUrl}/maps/${map_id}/nodes`,{name:"New Node"});
+        return response.data;
+    }catch(error){
+        console.error("Error during createNode");
+        throw error;
+    }
+}
+
+/**
+ * PUT /maps/:mapId/nodes/:nodeId
+ * @param {*} map_id 
+ * @returns {Promise<object>}
+ */
+export async function updateNode(map_id,node_id,node){
+    try{
+        const response = await axios.put(`${config.baseUrl}/maps/${map_id}/nodes/${node_id}`,node);
+        return response.data;
+    }catch(error){
+        console.error("Error during updateNode");
+        throw error;
+    }
+}
+
+/**
+ * DELETE /maps/:mapId/nodes/:nodeId
+ * @param {string} map_id 
+ * @param {string} node_id 
+ * @param {object} node 
+ * @returns {Promise<object>}
+ */
+export async function deleteNode(map_id,node_id,node){
+    try{
+        const response = await axios.delete(`${config.baseUrl}/maps/${map_id}/nodes/${node_id}`,node);
+        return response.data;
+    }catch(error){
+        console.error("Error during deleteNode");
+        throw error;
+    }
+}
+
+
+/**
+ * GET /maps/:mapid/links
+ * @param {string} map_id 
+ * @returns {Promise<object[]>}
+ */
 export async function getLinks(map_id){
-    await new Promise((resolve,reject) => setTimeout(resolve,500));
-    return [...linksData];
+    try{
+        const response = await axios.get(`${config.baseUrl}/maps/${map_id}/links`);
+        return response.data.results;
+    }catch(error){
+        console.error("Error during getLinks");
+        throw error;
+    }
 }
 
-
-export async function postLink(map_id,node_a_id,node_b_id){
-    await new Promise((resolve,reject) => setTimeout(resolve,500));
-    const link = {
-        id: linksData.length+1,
-        node_a_id,
-        node_b_id
-    };
-    linksData.push(link);
-    return link;
+/**
+ * POST /maps/:mapid/links
+ * @param {string} map_id 
+ * @returns {Promise<object>}
+ */
+export async function createLink(map_id,node_a_id,node_b_id){
+    try{
+        const response = await axios.post(`${config.baseUrl}/maps/${map_id}/links`,{node_a_id,node_b_id});
+        return response.data;
+    }catch(error){
+        console.error("Error during createLink");
+        throw error;
+    }
 }
 
+/**
+ * DELETE /maps/:mapId/links/link:id
+ * @param {string} map_id 
+ * @param {string} link_id 
+ * @returns {Promise<object>}
+ */
 export async function deleteLink(map_id,link_id){
-    console.log("DeleteLink",link_id);
-    await new Promise((resolve,reject) => setTimeout(resolve,500));
-    const index = linksData.findIndex(link => link.id===link_id);
-    console.log(index);
-    if(index===-1)return false;
-    linksData.splice(index,1);
-    return true;
+    try{
+        const response = await axios.delete(`${config.baseUrl}/maps/${map_id}/links/${link_id}`);
+        return response.data;
+    }catch(error){
+        console.error("Error during deleteLink");
+        throw error;
+    }
 }
 
+/**
+ * GET /maps/:mapId/nodes/:nodeId/fields
+ * @param {string} map_id 
+ * @param {string} node_id 
+ * @returns {Promise<object[]>}
+ */
 export async function getFields(map_id,node_id){
-    await new Promise((resolve,reject) => setTimeout(resolve,500));
-    return fieldsData;
+    try{
+        const response = await axios.get(`${config.baseUrl}/maps/${map_id}/nodes/${node_id}/fields`);
+        return response.data.results;
+    }catch(error){
+        console.error("Error during getFields");
+        throw error;
+    }
 }
 
-export async function addField(map_id,node_id,type){
-    await new Promise((resolve,reject) => setTimeout(resolve,500));
-    const field = {
-        id: fieldsData.length+1,
-        node_id: node_id,
-        type: type,
-        name: "",
-        value: ""
-    };
-
-    fieldsData.push(field);
-    return field;
+/**
+ * POST /maps/:mapId/nodes/:nodeId/fields
+ * @param {string} map_id 
+ * @param {string} node_id 
+ * @param {string} type 
+ * @returns {Promise<object>}
+ */
+export async function createField(map_id,node_id,type){
+    try{
+        const response = await axios.post(`${config.baseUrl}/maps/${map_id}/nodes/${node_id}/fields`,{type,name:"New Field",value:""});
+        return response.data;
+    }catch(error){
+        console.error("Error during createField");
+        throw error;
+    }
 }
 
+/**
+ * PUT /maps/:mapId/nodes/:nodeId/fields/:fieldId
+ * @param {string} map_id 
+ * @param {string} node_id 
+ * @param {string} field_id
+ * @param {object} data
+ * @param {string} data.name
+ * @param {string} data.value
+ * @returns {Promise<object>}
+ */
 export async function updateField(map_id,node_id,field_id,{name,value}){
-    await new Promise((resolve,reject) => setTimeout(resolve,500));
-    let field = fieldsData.find(f => f.id === field_id);
-    field.name=name;
-    field.value=value;
-    return field;
+    try{
+        const response = await axios.put(`${config.baseUrl}/maps/${map_id}/nodes/${node_id}/fields/${field_id}`,{name,value});
+        return response.data;
+    }catch(error){
+        console.error("Error during updateField");
+        throw error;
+    }
+}
+
+/**
+ * POST /maps/:mapId/nodes/:nodeId/fields
+ * @param {string} map_id 
+ * @param {string} node_id 
+ * @param {string} field_id 
+ * @returns {Promise<object>}
+ */
+export async function deleteField(map_id,node_id,field_id){
+    try{
+        const response = await axios.delete(`${config.baseUrl}/maps/${map_id}/nodes/${node_id}/fields/${field_id}`);
+        return response.data;
+    }catch(error){
+        console.error("Error during deleteField");
+        throw error;
+    }
 }

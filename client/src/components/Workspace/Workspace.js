@@ -5,52 +5,12 @@ import Sidebar from '../Sidebar/Sidebar';
 import './Workspace.scss';
 import { Selections } from '../../js/nodemaps';
 import Tools from '../Tools/Tools';
-import { deleteLink, getLinks, postLink } from '../../js/api';
+import { createNode, deleteLink, deleteNode, getLinks, getNodes, createLink, updateNode } from '../../js/api';
 
 export const NodesContext = createContext(null);
 export const LinksContext = createContext(null);
 export const SelectionContext = createContext(null);
 
-
-const nodesData = [
-    {
-        id: 1,
-        map_id: 1,
-        name: "Flexbox",
-        description: `Flexbox is a one-dimensional layout method for arranging items in rows or columns. Items flex (expand) to fill additional space or shrink to fit into smaller spaces. This article explains all the fundamentals.`,
-        x: 300,
-        y: 200
-    },
-    {
-        id: 2,
-        map_id: 1,
-        name: "justify-content",
-        description: `The CSS justify-content property defines how the browser distributes space between and around content items along the main-axis of a flex container, and the inline axis of a grid container.`,
-        x: 550,
-        y: 200
-    },
-    {
-        id: 3,
-        map_id: 1,
-        name: "align-items",
-        description: `The CSS align-items property sets the align-self value on all direct children as a group. In Flexbox, it controls the alignment of items on the Cross Axis. In Grid Layout, it controls the alignment of items on the Block Axis within their grid area.`,
-        x: 700,
-        y: 300
-    },
-];
-
-const linksData = [
-    {
-        id: 1,
-        node_a_id: 1,
-        node_b_id: 2,
-    },
-    {
-        id: 2,
-        node_a_id: 1,
-        node_b_id: 3,
-    },
-];
 
 function Workspace() {
     const [nodes, setNodes] = useState(null);
@@ -58,11 +18,13 @@ function Workspace() {
     const [selection, setSelection] = useState(new Selections());
 
 
+    ///Retrieve nodes and links
     useState(() => {
-        setNodes(nodesData);
-    }, []);
+        getNodes(1)
+            .then(nodeData => {
+                setNodes(nodeData.map((nd,index) => ({...nd,x:100+index*175,y:50+Math.random()*400})))
+            });
 
-    useState(() => {
         retrieveLinks();
     }, []);
 
@@ -76,29 +38,45 @@ function Workspace() {
     };
 
     const handleUpdate = (node) => {
-        setNodes(nodes.filter(n => n.id !== node.id).concat([node]));
+        const original = nodes.find(n => n.id === node.id);
+        if(node.name !== original.name || node.description !== original.description){
+            updateNode(1,node.id,node)
+                .then(nodeData => {
+                    setNodes( nodes.filter(n => n.id!==node.id).concat([{...nodeData,x:node.x,y:node.y}]) );
+                })
+        }else{
+            setNodes(nodes.filter(n => n.id !== node.id).concat([node]));
+        }
     };
 
     const handleAdd = (x=500,y=500) => {
-        const newNode = {
-            id: nodesData.length + 1,
-            map_id: 1,
-            name: "",
-            description: "",
-            x,
-            y
-        };
-        setNodes([...nodes, newNode]);
+        // const newNode = {
+        //     id: nodesData.length + 1,
+        //     map_id: 1,
+        //     name: "",
+        //     description: "",
+        //     x,
+        //     y
+        // };
+        createNode(1)
+            .then(nodeData => {
+                const node = {...nodeData,x,y};
+                console.log("New node: ",node);
+                setNodes([...nodes,node]);
+            });
     };
 
     const handleDelete = () => {
-        console.log("handleDelete");
+        const ids = [...selection.ids];
+        ids.forEach(id => {
+            deleteNode(1,id);
+        });
         setNodes(nodes.filter(node => !selection.contains(node.id)));
         handleSelect(selection.clear());
     };
 
     const handleLink = (node_a_id, node_b_id) => {
-        postLink(null, node_a_id, node_b_id)
+        createLink(null, node_a_id, node_b_id)
             .then(link => setLinks([...links, link]))
     };
 

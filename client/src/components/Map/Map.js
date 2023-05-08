@@ -94,8 +94,7 @@ function Map({ onSelect, onUpdate,onAdd,onDelete,onLink,onUnlink }) {
                 break;
             case "l": 
                 if(selection.length===2){
-                    const linkNodes = selection.findAll(nodes);
-                    onLink(linkNodes[0],linkNodes[1]);
+                    onLink(selection.ids[0],selection.ids[1]);
                 }
                 break;
             case "u": 
