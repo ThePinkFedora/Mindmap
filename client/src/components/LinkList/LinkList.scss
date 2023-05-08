@@ -1,0 +1,32 @@
+@use "../../styles/partials/colors";
+@use "../../styles/partials/fonts" as *;
+@use "../../styles/partials/mixins" as *;
+
+.link-list {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
+
+.link-item {
+    @include button;
+    padding: 0;
+    display: flex;
+
+  &__button {
+    @include button;
+    flex: 1;
+    text-align: left;
+  }
+
+  &__remove-button {
+    @include button;
+  }
+
+  &__icon {
+    display: block;
+    width: 1rem;
+  }
+}

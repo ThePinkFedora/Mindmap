@@ -164,3 +164,32 @@ export class LineObject {
     [this.startX, this.startY, this.endX, this.endY] = [startX, startY, endX, endY];
   }
 }
+
+export class Links {
+  static createLinkObjectList(links,nodes){
+    const getNodeById = (id) => nodes.find(n => n.id===id);
+    return links.map(link => 
+      new LinkObject(link.id,link.node_a_id,link.node_b_id,getNodeById(link.node_a_id).name,getNodeById(link.node_b_id).name)
+    );
+  }
+
+  static findNodes(links,nodes){
+    return nodes.filter(node => [links.node_a_id,links.node_b_id].includes(node.id));
+  }
+}
+
+export class LinkObject {
+  id;
+  node_a_id;
+  node_b_id;
+  node_a_name;
+  node_b_name;
+
+  constructor(id,node_a_id,node_b_id,node_a_name,node_b_name){
+      this.id=id;
+      this.node_a_id=node_a_id;
+      this.node_b_id=node_b_id;
+      this.node_a_name=node_a_name;
+      this.node_b_name=node_b_name;
+  }
+}

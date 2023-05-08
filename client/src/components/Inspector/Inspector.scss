@@ -48,6 +48,34 @@
     // }
 }
 
+.inspector-links{
+    margin-bottom: 1.5rem;
+
+    &__header{
+        position: relative;
+        margin: 0 0 0.25rem 2.5rem;
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        height: 2.5rem;
+    }
+
+    &__icon{
+        position: absolute;
+        left: -2.5rem;
+        top: 0.5rem;
+        width: 1.5rem;
+    }
+
+    &__title{
+        @include font-label;
+    }
+
+    &__content{
+        margin-left: 2.5rem;
+    }
+}
+
 .add-field{
     margin-left: 1rem;
 

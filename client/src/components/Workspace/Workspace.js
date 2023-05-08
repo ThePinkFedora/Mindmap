@@ -91,7 +91,7 @@ function Workspace() {
                     <SelectionContext.Provider value={selection}>
                         <Sidebar onSelect={handleSelect} />
                         <Map onSelect={handleSelect} onUpdate={handleUpdate} onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
-                        <Inspector onUpdate={handleUpdate} />
+                        <Inspector onSelect={handleSelect} onUpdate={handleUpdate} />
                         <Tools onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
                     </SelectionContext.Provider>
                 </LinksContext.Provider>

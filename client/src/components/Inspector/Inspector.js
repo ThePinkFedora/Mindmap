@@ -1,19 +1,22 @@
 import { useContext, useEffect, useState } from 'react';
 import './Inspector.scss';
-import { NodesContext, SelectionContext } from '../Workspace/Workspace';
-import { Selections, Fields } from '../../js/nodemaps';
+import { LinksContext, NodesContext, SelectionContext } from '../Workspace/Workspace';
+import { Selections, Fields, Links } from '../../js/nodemaps';
 import InspectorItem from '../InspectorItem/InspectorItem';
 import { createField, deleteField, getFields, updateField } from '../../js/api';
+import LinkList from '../LinkList/LinkList';
+import linkIcon from '../../assets/images/link.svg';
 
 
 /**
  * @param {object} props
  * @param {*} props.onUpdate
  */
-function Inspector({ onUpdate }) {
+function Inspector({ onSelect,onUpdate }) {
     const nodes = useContext(NodesContext);
     /**@type {Selections} */
     const selections = useContext(SelectionContext);
+    const links = useContext(LinksContext);
     const selectedNodes = selections.ids.map(id => nodes.find(node => node.id === id));
 
     const [fields, setFields] = useState(null);
@@ -56,8 +59,21 @@ function Inspector({ onUpdate }) {
     };
 
     const handleDelete = (field_id) => {
-        deleteField(1,selectedNodes[0].id,field_id)
-            .then(res => setFields(fields.filter(field=>field.id!==field_id)));
+        deleteField(1, selectedNodes[0].id, field_id)
+            .then(res => setFields(fields.filter(field => field.id !== field_id)));
+    };
+
+    const handleLinkClick = (link_id) => {
+        const link = links.find(link => link.id === link_id);
+        const linkNodes = Links.findNodes(link,nodes);
+        const otherNode = linkNodes.find(n => !selections.contains(n.id));
+        onSelect(selections.set(otherNode.id));
+
+        console.log({link,linkNodes,otherNode});
+    };
+
+    const handleLinkDelete = (link_id) => {
+
     };
 
     return (
@@ -92,6 +108,20 @@ function Inspector({ onUpdate }) {
                             </li>
                         ))}
                     </>}
+                    {selectedNodes.length===1 && 
+                        <li>
+                            <div className="inspector-links">
+                                <div className="inspector-links__header">
+                                    <img className="inspector-links__icon" src={linkIcon} alt="link" />
+                                    <h2 className="inspector-links__title">Links</h2>
+                                </div>
+                                <div className="inspector-links__content">
+                                    <LinkList nodeId={selectedNodes[0].id} onClick={handleLinkClick} onRemove={handleLinkDelete} />
+                                </div>
+                            </div>
+                            
+                        </li>
+                    }
                 </ul>
                 {selectedNodes.length === 1 && <AddField onAddField={handleAddField} />}
             </div>
