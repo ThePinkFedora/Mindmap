@@ -41,6 +41,7 @@ function Map({ onSelect, onUpdate,onAdd,onDelete,onLink,onUnlink }) {
      */
     const handleNodeGrab = (event, nodeId) => {
         event.stopPropagation();
+        onSelect(event.ctrlKey ? selection.toggle(nodeId): selection.set(nodeId));
         setDraggingID(nodeId);
     }
 
