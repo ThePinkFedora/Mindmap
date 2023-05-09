@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, startTransition, useContext, useState } from 'react';
 import Inspector from '../Inspector/Inspector';
 import Map from '../Map/Map';
 import Sidebar from '../Sidebar/Sidebar';
@@ -26,7 +26,7 @@ function Workspace() {
     useState(() => {
         getNodes(1)
             .then(nodeData => {
-                setNodes(nodeData.map((nd, index) => ({ ...nd, x: 500 + index * 175, y: 150 + Math.random() * 400 })))
+                setNodes(nodeData.map((nd, index) => ({ ...nd, x: 375 + index * 175, y: 150 + Math.random() * 400 })))
             });
 
         retrieveLinks();
@@ -54,19 +54,11 @@ function Workspace() {
     };
 
     const handleAdd = (x = 500, y = 500) => {
-        // const newNode = {
-        //     id: nodesData.length + 1,
-        //     map_id: 1,
-        //     name: "",
-        //     description: "",
-        //     x,
-        //     y
-        // };
         createNode(1)
             .then(nodeData => {
                 const node = { ...nodeData, x, y };
-                console.log("New node: ", node);
                 setNodes([...nodes, node]);
+                handleSelect(selection.set(node.id));
             });
     };
 

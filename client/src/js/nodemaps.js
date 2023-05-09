@@ -62,6 +62,10 @@ export class Selections {
    * @returns {Selections} - this
   */
   set(id) {
+    if(typeof id === 'object' && id){
+      throw new Error("Selection.set() called with invalid value. Type 'object'");
+    }
+
     this.ids = !id ? []
       : Array.isArray(id) ? [...id]
       : [id];
@@ -130,7 +134,7 @@ export class Fields {
       },
       {
         name: "Checklist",
-        type: "checllist",
+        type: "checklist",
         icon: this.icons.checklist.icon,
         alt: this.icons.checklist.alt
       },
