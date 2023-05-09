@@ -1,11 +1,13 @@
+import './Workspace.scss';
 import { createContext, startTransition, useContext, useState } from 'react';
+import { createNode, deleteLink, deleteNode, getLinks, getNodes, createLink, updateNode } from '../../js/api';
+import { Selections } from '../../js/nodemaps';
 import Inspector from '../Inspector/Inspector';
 import Map from '../Map/Map';
 import Sidebar from '../Sidebar/Sidebar';
-import './Workspace.scss';
-import { Selections } from '../../js/nodemaps';
 import Tools from '../Tools/Tools';
-import { createNode, deleteLink, deleteNode, getLinks, getNodes, createLink, updateNode } from '../../js/api';
+import Hotkeys from './Hotkeys';
+
 
 export const NodesContext = createContext(null);
 export const LinksContext = createContext(null);
@@ -17,10 +19,11 @@ function Workspace() {
     const [nodes, setNodes] = useState(null);
     const [links, setLinks] = useState(null);
     const [workspace, setWorkspace] = useState({
-        focus: null
+        focus: null,
+        cursorX: 0,
+        cursorY: 0
     });
     const [selection, setSelection] = useState(new Selections());
-
 
     ///Retrieve nodes and links
     useState(() => {
@@ -86,10 +89,12 @@ function Workspace() {
                 <LinksContext.Provider value={links}>
                     <SelectionContext.Provider value={selection}>
                         <WorkspaceContext.Provider value={{ workspace, setWorkspace }}>
-                            <Sidebar onSelect={handleSelect} onUnlink={handleUnlink} />
-                            <Map onSelect={handleSelect} onUpdate={handleUpdate} onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
-                            <Inspector onSelect={handleSelect} onUpdate={handleUpdate} />
-                            <Tools onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
+                            <Hotkeys onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink}>
+                                <Sidebar onSelect={handleSelect} onUnlink={handleUnlink} />
+                                <Map onSelect={handleSelect} onUpdate={handleUpdate} onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
+                                <Inspector onSelect={handleSelect} onUpdate={handleUpdate} />
+                                <Tools onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
+                            </Hotkeys>
                         </WorkspaceContext.Provider>
                     </SelectionContext.Provider>
                 </LinksContext.Provider>
@@ -97,4 +102,15 @@ function Workspace() {
         </main>
     );
 }
+
+function MyProviders({ children }) {
+    return (
+        <>
+            {children}
+        </>
+    );
+}
+
+
+
 export default Workspace;

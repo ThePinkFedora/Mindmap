@@ -13,7 +13,6 @@ function Node({ node, isSelected, onGrab }) {
     };
 
     return (
-        // <Draggable onStart={e=>e.stopPropagation()} onDrag={onDrag}>
             <div id={`node_${node.id}`}
                 className={`node ${isSelected ? "node--selected" : ""}`}
                 style={style}
@@ -23,7 +22,6 @@ function Node({ node, isSelected, onGrab }) {
                 <div className={`node__inner ${isSelected ? "node__inner--selected" : ""}`}></div>
                 <p className="node__label">{node.name}</p>
             </div>
-        // </Draggable>
     );
 }
 export default Node;

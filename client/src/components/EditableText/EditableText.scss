@@ -10,6 +10,7 @@
     &__text{
         @include font-field;
         width: 100%;
+        white-space: pre-wrap;
 
         &--line{
             @include font-label;
