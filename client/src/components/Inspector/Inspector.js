@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import './Inspector.scss';
-import { LinksContext, NodesContext, SelectionContext } from '../Workspace/Workspace';
+import { LinksContext, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
 import { Selections, Fields, Links } from '../../js/nodemaps';
 import InspectorItem from '../InspectorItem/InspectorItem';
 import { createField, deleteField, getFields, updateField } from '../../js/api';
@@ -17,6 +17,7 @@ function Inspector({ onSelect,onUpdate }) {
     /**@type {Selections} */
     const selections = useContext(SelectionContext);
     const links = useContext(LinksContext);
+    const {workspace,setWorkspace} = useContext(WorkspaceContext);
     const selectedNodes = selections.ids.map(id => nodes.find(node => node.id === id));
 
     const [fields, setFields] = useState(null);
@@ -68,6 +69,7 @@ function Inspector({ onSelect,onUpdate }) {
         const linkNodes = Links.findNodes(link,nodes);
         const otherNode = linkNodes.find(n => !selections.contains(n.id));
         onSelect(selections.set(otherNode.id));
+        setWorkspace({...workspace,focus:otherNode.id});
 
         console.log({link,linkNodes,otherNode});
     };

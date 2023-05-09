@@ -1,7 +1,7 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './Map.scss';
 import { TransformWrapper, TransformComponent, useTransformContext } from "react-zoom-pan-pinch";
-import { LinksContext, NodesContext, SelectionContext } from '../Workspace/Workspace';
+import { LinksContext, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
 import Node from '../Node/Node';
 import { Selections, Lines,LineObject } from '../../js/nodemaps';
 import { useRef } from 'react';
@@ -19,11 +19,20 @@ function Map({ onSelect, onUpdate,onAdd,onDelete,onLink,onUnlink }) {
     const links = useContext(LinksContext);
     /** @type {Selections} */
     const selection = useContext(SelectionContext);
+    const {workspace,setWorkspace} = useContext(WorkspaceContext);
     const [draggingID, setDraggingID] = useState(null);
     const pageRef = useRef(null);
     const mouseRef = useRef({x:0,y:0});
+    const transformRef = useRef(null);
 
+    useEffect(()=>{
+        if(workspace.focus){
+            const node = nodes.find(node => node.id === workspace.focus);
+            const rect = pageRef.current.parentElement.parentElement.getBoundingClientRect();
 
+            transformRef.current.setTransform(-node.x+rect.width/2,-node.y+rect.height/2,1,300,"easeOut");
+        }
+    },[workspace.focus]);
 
     /**
      * @param {import('react').MouseEvent} event 
@@ -50,6 +59,9 @@ function Map({ onSelect, onUpdate,onAdd,onDelete,onLink,onUnlink }) {
      */
     const handleBackgroundClick = (event) => {
         onSelect(selection.set(null));
+        if(workspace.focus){
+            setWorkspace({...workspace,focus:null});
+        }
     };
 
     /**
@@ -108,13 +120,15 @@ function Map({ onSelect, onUpdate,onAdd,onDelete,onLink,onUnlink }) {
         }
     };
 
+    
+
     const lines = (links !== null && nodes!=null) ? Lines.createLines(nodeSize,links,nodes) : [];
 
 
 
     return (
         <section className="map"  >
-            <TransformWrapper panning={{ disabled: draggingID !== null }}>
+            <TransformWrapper ref={transformRef} panning={{ disabled: draggingID !== null }}>
                 <TransformComponent wrapperStyle={{ width: "100%", height: "100%", }}  >
                     <div className="map__sheet" ref={pageRef} tabIndex="0" onClick={handleBackgroundClick} onMouseMove={handleMouseMove} onKeyDown={handleKeyDown}>
                         {lines.map((line,index) => <Line key={index} start={{ x: line.startX, y: line.startY }} end={{ x: line.endX, y: line.endY }} />)}

@@ -14,7 +14,7 @@ function Node({ node, isSelected, onGrab }) {
 
     return (
         // <Draggable onStart={e=>e.stopPropagation()} onDrag={onDrag}>
-            <div
+            <div id={`node_${node.id}`}
                 className={`node ${isSelected ? "node--selected" : ""}`}
                 style={style}
                 onClick={(event)=>{event.stopPropagation()}}
