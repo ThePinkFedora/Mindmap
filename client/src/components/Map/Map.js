@@ -95,7 +95,7 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
 
 /**
  * @param {object} props
- * 
+ * @param {Selection} props.selection
  */
 function Sheet({ children, selection, onSelect, workspace, setWorkspace,onMouseMove }) {
     const sheetRef = useRef(null);

@@ -36,7 +36,7 @@ function Workspace() {
     }, []);
 
     function retrieveLinks() {
-        getLinks(null)
+        getLinks(1)
             .then(links => setLinks(links));
     }
 
@@ -67,10 +67,14 @@ function Workspace() {
 
     const handleDelete = () => {
         const ids = [...selection.ids];
-        ids.forEach(id => {
-            deleteNode(1, id);
-        });
+        
+        //Send delete requests
+        ids.forEach(id => deleteNode(1, id)); 
+
+        //Remove deleted nodes, and dependant links
         setNodes(nodes.filter(node => !selection.contains(node.id)));
+        setLinks(links.filter(link => !selection.contains(link.node_a_id) && !selection.contains(link.node_b_id)));
+
         handleSelect(selection.clear());
     };
 

@@ -18,7 +18,11 @@ function Hotkeys({ children, onAdd, onDelete, onLink, onUnlink }) {
         }
 
         switch (event.key) {
-            case "x": onDelete(); break;
+            case "x": 
+            case "Delete": 
+                onDelete(); 
+                break;
+            
             case "n":
                 onAdd(workspace.cursorX, workspace.cursorY);
                 break;
