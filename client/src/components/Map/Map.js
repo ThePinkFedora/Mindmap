@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import './Map.scss';
-import { TransformWrapper, TransformComponent, useTransformContext } from "react-zoom-pan-pinch";
+import { TransformWrapper, TransformComponent, useTransformContext, useTransformEffect } from "react-zoom-pan-pinch";
 import { LinksContext, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
 import Node from '../Node/Node';
 import { Selections, Lines, LineObject } from '../../js/nodemaps';
 import { useRef } from 'react';
 import Line from '../Line/Line';
+
 
 const nodeSize = 48;
 
@@ -21,23 +22,21 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
     const selection = useContext(SelectionContext);
     const { workspace, setWorkspace } = useContext(WorkspaceContext);
     const [draggingID, setDraggingID] = useState(null);
-    const pageRef = useRef(null);
-    const mouseRef = useRef({ x: 0, y: 0 });
-    const transformRef = useRef(null);
+    const transformWrapperRef = useRef(null);
 
     //Focus effect
     useEffect(() => {
         if (workspace.focus) {
             const node = nodes.find(node => node.id === workspace.focus);
-            const rect = pageRef.current.parentElement.parentElement.getBoundingClientRect();
+            const rect = transformWrapperRef.current.instance.wrapperComponent.getBoundingClientRect();
 
-            transformRef.current.setTransform(-node.x + rect.width / 2, -node.y + rect.height / 2, 1, 300, "easeOut");
+            transformWrapperRef.current.setTransform(-node.x + rect.width / 2, -node.y + rect.height / 2, 1, 300, "easeOut");
         }
     }, [workspace.focus]);
 
     /**
      * @param {import('react').MouseEvent} event 
-     * @param {*} nodeId 
+     * @param {string} nodeId - The id of the node
      */
     const handleNodeGrab = (event, nodeId) => {
         event.stopPropagation();
@@ -47,32 +46,17 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
 
     /**
      * @param {import('react').MouseEvent} event 
+     * @param {{x: number, y:number}} position - The position of the cursor relative to the sheet
      */
-    const handleBackgroundClick = (event) => {
-        onSelect(selection.set(null));
-        if (workspace.focus) {
-            setWorkspace({ ...workspace, focus: null });
-        }
-    };
-
-    /**
-     * @param {import('react').MouseEvent} event 
-     */
-    const handleMouseMove = (event) => {
-        const rect = pageRef.current.getBoundingClientRect();
-        mouseRef.current = { x: event.clientX - rect.x - nodeSize / 2, y: event.clientY - rect.y - nodeSize / 2 };
-        setWorkspace({...workspace,cursorX: mouseRef.current.x,cursorY: mouseRef.current.y});
+    const handleMouseMove = (event,position) => {
+        setWorkspace({ ...workspace, cursorX: position.x, cursorY: position.y });
         if (event.buttons === 1) {
             if (draggingID) {
                 event.stopPropagation();
-
+                
                 const node = nodes.find(node => node.id === draggingID);
-                const { clientX, clientY } = event;
-
-                const rect = pageRef.current.getBoundingClientRect();
-
-                node.x = clientX - rect.x - nodeSize / 2;
-                node.y = clientY - rect.y - nodeSize / 2;
+                node.x = position.x;
+                node.y = position.y;
                 onUpdate(node);
             }
         } else if (draggingID) {
@@ -84,12 +68,13 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
 
     return (
         <section className="map"  >
-            <TransformWrapper ref={transformRef} panning={{ disabled: draggingID !== null }}>
+            <TransformWrapper ref={transformWrapperRef} panning={{ disabled: draggingID !== null }} minScale={0.25}>
                 <TransformComponent wrapperStyle={{ width: "100%", height: "100%", }}  >
-                    <div
-                        className="map__sheet"
-                        ref={pageRef} tabIndex="0"
-                        onClick={handleBackgroundClick}
+                    <Sheet 
+                        selection={selection} 
+                        onSelect={onSelect} 
+                        workspace={workspace} 
+                        setWorkspace={setWorkspace}
                         onMouseMove={handleMouseMove}
                     >
                         {lines.map((line, index) => <Line key={index} start={{ x: line.startX, y: line.startY }} end={{ x: line.endX, y: line.endY }} />)}
@@ -101,10 +86,67 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
                                 onGrab={handleNodeGrab}
                             />
                         ))}
-                    </div>
+                    </Sheet>
                 </TransformComponent>
             </TransformWrapper>
         </section >
     );
 }
+
+/**
+ * @param {object} props
+ * 
+ */
+function Sheet({ children, selection, onSelect, workspace, setWorkspace,onMouseMove }) {
+    const sheetRef = useRef(null);
+    const transformStateRef = useRef({ previousScale: 1, scale: 1, positionX: 0, positionY: 0 });
+    
+
+    useTransformEffect(({ state, instance }) => {
+        // console.log(state); // { previousScale: 1, scale: 1, positionX: 0, positionY: 0 }
+
+        transformStateRef.current = state;
+        return () => {
+            // unmount
+        };
+    });
+
+    /**
+     * @param {import('react').MouseEvent} event 
+     */
+    const handleBackgroundClick = (event) => {
+        //If there's any selection, clear it
+        if(selection.length){
+            onSelect(selection.set(null));
+        }
+        //If there's a focus, clear it
+        if (workspace.focus) {
+            setWorkspace({ ...workspace, focus: null });
+        }
+    };
+
+    const handleMouseMove = (event) => {
+        const rect = sheetRef.current.getBoundingClientRect();
+        const scale = transformStateRef.current.scale;
+
+        const position = {
+            x: (event.clientX - rect.x - nodeSize / 2) / scale,
+            y: (event.clientY - rect.y - nodeSize / 2) / scale
+        };
+        onMouseMove(event,position);
+    };
+
+    return (
+        <div
+            ref={sheetRef}
+            className="map__sheet"
+            onClick={handleBackgroundClick}
+            onMouseMove={handleMouseMove}
+        >
+            {children}
+        </div>
+    );
+}
+
+
 export default Map;
