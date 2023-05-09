@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import './LinksPanel.scss';
-import { LinksContext, NodesContext, SelectionContext } from '../Workspace/Workspace';
+import { LinksContext, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
 import { Links, Selections } from '../../js/nodemaps';
 
 /**
@@ -15,6 +15,7 @@ function LinksPanel({ onSelect,onUnlink }) {
     const selection = useContext(SelectionContext);
     /**@type {object[]} */
     const nodes = useContext(NodesContext);
+    const {workspace,setWorkspace} = useContext(WorkspaceContext);
 
     /**
      * @param {Event} event 
@@ -33,6 +34,7 @@ function LinksPanel({ onSelect,onUnlink }) {
             onSelect(selection.set(nodeIds));
         }
 
+        setWorkspace({...workspace,focus:[...selection.ids]});
     };
 
     /**

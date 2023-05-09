@@ -1,14 +1,16 @@
 import { useContext } from 'react';
 import './NodesPanel.scss';
-import {NodesContext, SelectionContext} from '../Workspace/Workspace';
+import {NodesContext, SelectionContext, WorkspaceContext} from '../Workspace/Workspace';
 
 function NodesPanel({onSelect}){
     const nodes = useContext(NodesContext);
     const selection = useContext(SelectionContext);
+    const {workspace,setWorkspace} = useContext(WorkspaceContext);
 
     const handleSelect = (event,nodeId) => {
         event.preventDefault();
         onSelect(event.ctrlKey ? selection.toggle(nodeId) : selection.set(nodeId));
+        setWorkspace({...workspace,focus:nodeId});
     };
 
     return (

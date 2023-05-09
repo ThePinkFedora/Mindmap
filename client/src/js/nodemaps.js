@@ -62,13 +62,14 @@ export class Selections {
    * @returns {Selections} - this
   */
   set(id) {
-    if(typeof id === 'object' && id){
-      throw new Error("Selection.set() called with invalid value. Type 'object'");
+    if(Array.isArray(id)){
+      this.ids = [...id];
+    }else if(!id){
+      this.ids = [];
+    }else{
+      this.ids = [id];
     }
 
-    this.ids = !id ? []
-      : Array.isArray(id) ? [...id]
-      : [id];
     return this;
   }
   /**

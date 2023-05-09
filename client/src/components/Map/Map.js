@@ -6,6 +6,7 @@ import Node from '../Node/Node';
 import { Selections, Lines, LineObject } from '../../js/nodemaps';
 import { useRef } from 'react';
 import Line from '../Line/Line';
+import { VectorMath } from '../../js/math';
 
 
 const nodeSize = 48;
@@ -27,10 +28,18 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
     //Focus effect
     useEffect(() => {
         if (workspace.focus) {
-            const node = nodes.find(node => node.id === workspace.focus);
-            const rect = transformWrapperRef.current.instance.wrapperComponent.getBoundingClientRect();
+            
 
-            transformWrapperRef.current.setTransform(-node.x + rect.width / 2, -node.y + rect.height / 2, 1, 300, "easeOut");
+            const focusNodes = 
+                Array.isArray(workspace.focus) 
+                    ? nodes.filter(node => workspace.focus.includes(node.id))
+                    : [nodes.find(node => node.id === workspace.focus)];
+            
+
+            const focusAverage = VectorMath.average(focusNodes);
+
+            const rect = transformWrapperRef.current.instance.wrapperComponent.getBoundingClientRect();
+            transformWrapperRef.current.setTransform(-focusAverage.x + rect.width / 2, -focusAverage.y + rect.height / 2, 1, 300, "easeOut");
         }
     }, [workspace.focus]);
 
