@@ -71,9 +71,10 @@ module.exports = {
     },
     update: async (req,res) => {
         const {mapId,nodeId} = req.params;
-        const {name,description} = req.body;
+        const {name,description,x,y} = req.body;
+        
         try{
-            const updates = await db(dbName).where({id:nodeId}).update({name,description});
+            const updates = await db(dbName).where({id:nodeId}).update({name,description,x,y});
             if(updates){
                 const results = await db(dbName).where({id:nodeId});
                 res.json(results[0]);
