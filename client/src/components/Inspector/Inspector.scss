@@ -5,8 +5,8 @@
 
 .inspector{
     @include common-box-shadow;
-    width: 21.25rem;
-    min-width: 21.25rem;
+    // width: 21.25rem;
+    // min-width: 21.25rem;
     color: colors.$text-dark;
     padding: 0.5rem;
     display: flex;

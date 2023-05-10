@@ -7,6 +7,7 @@ import Map from '../Map/Map';
 import Sidebar from '../Sidebar/Sidebar';
 import Tools from '../Tools/Tools';
 import Hotkeys from './Hotkeys';
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 
 export const NodesContext = createContext(null);
@@ -14,11 +15,11 @@ export const LinksContext = createContext(null);
 export const SelectionContext = createContext(null);
 export const WorkspaceContext = createContext(null);
 
-function save(nodes){
+function save(nodes) {
     nodes.forEach(node => {
-        if(node.moved){
-            updateNode(1,node.id,node);
-            node.moved=false;
+        if (node.moved) {
+            updateNode(1, node.id, node);
+            node.moved = false;
         }
     });
 }
@@ -43,7 +44,7 @@ function Workspace() {
 
         retrieveLinks();
     }, []);
-    
+
 
     function retrieveLinks() {
         getLinks(1)
@@ -55,8 +56,8 @@ function Workspace() {
     });
 
     ///Autosave Effect
-    useEffect(()=>{
-        const interval = setInterval(handleAutoSave,5000);
+    useEffect(() => {
+        const interval = setInterval(handleAutoSave, 5000);
         return () => clearInterval(interval);
     });
 
@@ -69,14 +70,14 @@ function Workspace() {
 
     const handleUpdate = (node) => {
         const original = nodes.find(n => n.id === node.id);
-        
+
         if (node.name !== original.name || node.description !== original.description) {
             updateNode(1, node.id, node)
                 .then(nodeData => {
                     setNodes(nodes.filter(n => n.id !== node.id).concat([{ ...nodeData, x: node.x, y: node.y }]));
                 })
         } else {
-            node.moved=true;
+            node.moved = true;
             setNodes(nodes.filter(n => n.id !== node.id).concat([node]));
         }
     };
@@ -92,9 +93,9 @@ function Workspace() {
 
     const handleDelete = () => {
         const ids = [...selection.ids];
-        
+
         //Send delete requests
-        ids.forEach(id => deleteNode(1, id)); 
+        ids.forEach(id => deleteNode(1, id));
 
         //Remove deleted nodes, and dependant links
         setNodes(nodes.filter(node => !selection.contains(node.id)));
@@ -116,14 +117,25 @@ function Workspace() {
         <main className="workspace">
             <NodesContext.Provider value={nodes}>
                 <LinksContext.Provider value={links}>
-                    <SelectionContext.Provider value={{selection,setSelection:handleSelect}}>
+                    <SelectionContext.Provider value={{ selection, setSelection: handleSelect }}>
                         <WorkspaceContext.Provider value={{ workspace, setWorkspace }}>
                             <Hotkeys onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink}>
-                                <Sidebar onSelect={handleSelect} onUnlink={handleUnlink} />
-                                <Map onSelect={handleSelect} onUpdate={handleUpdate} onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
-                                <Inspector onSelect={handleSelect} onUpdate={handleUpdate} />
+                                <PanelGroup className="workspace-panels" autoSaveId="workspacePanels" direction="horizontal">
+                                    <Panel className="workspace-panels__panel" defaultSize={20} minSize={20}>
+                                        <Sidebar onSelect={handleSelect} onUnlink={handleUnlink} />
+                                    </Panel>
+                                    <PanelResizeHandle className="workspace-panels__resize-handle"/>
+                                    <Panel className="workspace-panels__panel" minSize={30}>
+                                        <Map onSelect={handleSelect} onUpdate={handleUpdate} onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
+                                    </Panel>
+                                    <PanelResizeHandle className="workspace-panels__resize-handle"/>
+                                    <Panel className="workspace-panels__panel" defaultSize={20} minSize={20}>
+                                        <Inspector onSelect={handleSelect} onUpdate={handleUpdate} />
+                                    </Panel>
+                                </PanelGroup>
                                 <Tools onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
                             </Hotkeys>
+                            
                         </WorkspaceContext.Provider>
                     </SelectionContext.Provider>
                 </LinksContext.Provider>
