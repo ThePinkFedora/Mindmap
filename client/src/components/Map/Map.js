@@ -161,7 +161,7 @@ function Sheet({ children, selection, onSelect, workspace, setWorkspace, onMouse
             onClick={handleBackgroundClick}
             onMouseMove={handleMouseMove}
         >
-            <SelectionRect>
+            <SelectionRect scale={transformStateRef.current.scale}>
                 {children}
             </SelectionRect>
         </div>
