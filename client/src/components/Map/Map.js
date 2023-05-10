@@ -6,22 +6,19 @@ import Node from '../Node/Node';
 import { Selections, Lines, LineObject } from '../../js/nodemaps';
 import { useRef } from 'react';
 import Line from '../Line/Line';
-import { VectorMath } from '../../js/math';
+import { Vector2, VectorMath } from '../../js/math';
 import SelectionRect from '../SelectionRect/SelectionRect';
-
-
-const nodeSize = 48;
 
 /**
  * @param {object} props
  * @param {(selections:Selections)=>{}} props.onSelect
  * @returns 
  */
-function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
+function Map({ onUpdate }) {
     const nodes = useContext(NodesContext);
     const links = useContext(LinksContext);
     /** @type {Selections} */
-    const {selection,setSelection} = useContext(SelectionContext);
+    const { selection, setSelection } = useContext(SelectionContext);
     const { workspace, setWorkspace } = useContext(WorkspaceContext);
     const [draggingID, setDraggingID] = useState(null);
     const transformWrapperRef = useRef(null);
@@ -29,8 +26,6 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
     //Focus effect
     useEffect(() => {
         if (workspace.focus) {
-
-
             const focusNodes =
                 Array.isArray(workspace.focus)
                     ? nodes.filter(node => workspace.focus.includes(node.id))
@@ -41,8 +36,7 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
 
             const rect = transformWrapperRef.current.instance.wrapperComponent.getBoundingClientRect();
             transformWrapperRef.current.setTransform(-focusAverage.x + rect.width / 2, -focusAverage.y + rect.height / 2, 1, 300, "easeOut");
-        
-            console.log({focusAverage,rect});
+
         }
     }, [workspace.focus]);
 
@@ -52,9 +46,16 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
      */
     const handleNodeGrab = (event, nodeId) => {
         event.stopPropagation();
-        onSelect(event.ctrlKey ? selection.toggle(nodeId) : selection.set(nodeId));
+        // setSelection(event.ctrlKey ? selection.toggle(nodeId) : selection.set(nodeId));
         setDraggingID(nodeId);
     }
+
+    const handleNodeRelease = (event, nodeId) => {
+        event.stopPropagation();
+        setSelection(event.ctrlKey ? selection.toggle(nodeId) : selection.set(nodeId));
+        // setDraggingID(nodeId);
+    }
+
 
     /**
      * @param {import('react').MouseEvent} event 
@@ -67,16 +68,22 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
                 event.stopPropagation();
 
                 const node = nodes.find(node => node.id === draggingID);
-                node.x = position.x;
-                node.y = position.y;
-                onUpdate(node);
+                const offset = new Vector2({x:position.x-node.x,y:position.y-node.y});
+
+                const moveNoves = selection.contains(node.id) ? selection.findAll(nodes) : [node];
+
+                moveNoves.forEach(node => {
+                    node.x += offset.x;
+                    node.y += offset.y;
+                    onUpdate(node);
+                });
             }
         } else if (draggingID) {
             setDraggingID(null);
         }
     };
 
-    const lines = (links !== null && nodes != null) ? Lines.createLines(nodeSize, links, nodes) : [];
+    const lines = (links !== null && nodes != null) ? Lines.createLines(links, nodes) : [];
 
     return (
         <section className="map"  >
@@ -84,7 +91,7 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
                 <TransformComponent wrapperStyle={{ width: "100%", height: "100%", }}  >
                     <Sheet
                         selection={selection}
-                        onSelect={onSelect}
+                        onSelect={setSelection}
                         workspace={workspace}
                         setWorkspace={setWorkspace}
                         onMouseMove={handleMouseMove}
@@ -96,6 +103,7 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
                                 node={node}
                                 isSelected={selection.contains(node.id)}
                                 onGrab={handleNodeGrab}
+                                onRelease={handleNodeRelease}
                             />
                         ))}
                     </Sheet>
@@ -115,11 +123,7 @@ function Sheet({ children, selection, onSelect, workspace, setWorkspace, onMouse
 
 
     useTransformEffect(({ state, instance }) => {
-        // console.log(state); // { previousScale: 1, scale: 1, positionX: 0, positionY: 0 }
-
         transformStateRef.current = state;
-
-        console.log({transformState:state});
         return () => {
             // unmount
         };
@@ -144,8 +148,8 @@ function Sheet({ children, selection, onSelect, workspace, setWorkspace, onMouse
         const scale = transformStateRef.current.scale;
 
         const position = {
-            x: (event.clientX - rect.x - nodeSize / 2) / scale,
-            y: (event.clientY - rect.y - nodeSize / 2) / scale
+            x: (event.clientX - rect.x) / scale,
+            y: (event.clientY - rect.y) / scale
         };
         onMouseMove(event, position);
     };
