@@ -41,6 +41,8 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
 
             const rect = transformWrapperRef.current.instance.wrapperComponent.getBoundingClientRect();
             transformWrapperRef.current.setTransform(-focusAverage.x + rect.width / 2, -focusAverage.y + rect.height / 2, 1, 300, "easeOut");
+        
+            console.log({focusAverage,rect});
         }
     }, [workspace.focus]);
 
@@ -78,7 +80,7 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
 
     return (
         <section className="map"  >
-            <TransformWrapper ref={transformWrapperRef} panning={{ disabled: draggingID !== null }} minScale={0.25}>
+            <TransformWrapper ref={transformWrapperRef} panning={{ disabled: draggingID !== null }} minScale={0.25} limitToBounds={false}>
                 <TransformComponent wrapperStyle={{ width: "100%", height: "100%", }}  >
                     <Sheet
                         selection={selection}
@@ -116,6 +118,8 @@ function Sheet({ children, selection, onSelect, workspace, setWorkspace, onMouse
         // console.log(state); // { previousScale: 1, scale: 1, positionX: 0, positionY: 0 }
 
         transformStateRef.current = state;
+
+        console.log({transformState:state});
         return () => {
             // unmount
         };
