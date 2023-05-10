@@ -22,6 +22,7 @@ function Map({ onUpdate }) {
     const { workspace, setWorkspace } = useContext(WorkspaceContext);
     const [draggingID, setDraggingID] = useState(null);
     const transformWrapperRef = useRef(null);
+    const panningIntervalRef = useRef(null);
 
     //Focus effect
     useEffect(() => {
@@ -40,6 +41,21 @@ function Map({ onUpdate }) {
         }
     }, [workspace.focus]);
 
+    //Panning effect
+    useEffect(() => {
+        if (workspace.panningX || workspace.panningY) {
+            function pan(){
+                const wrapper = transformWrapperRef.current;
+                const { positionX, positionY } = wrapper.instance.transformState;
+                wrapper.setTransform(positionX + workspace.panningX * -50, positionY + workspace.panningY * -50, wrapper.instance.transformState.scale, 125, "linear");
+            }
+            panningIntervalRef.current = setInterval(pan, 100);
+            pan();
+        }
+
+        return () => clearInterval(panningIntervalRef.current);
+    }, [workspace.panningX, workspace.panningY]);
+
     /**
      * @param {import('react').MouseEvent} event 
      * @param {string} nodeId - The id of the node
@@ -52,8 +68,12 @@ function Map({ onUpdate }) {
 
     const handleNodeRelease = (event, nodeId) => {
         event.stopPropagation();
-        setSelection(event.ctrlKey ? selection.toggle(nodeId) : selection.set(nodeId));
-        // setDraggingID(nodeId);
+        setSelection(
+            event.ctrlKey ?
+                selection.toggle(nodeId) :
+                event.shiftKey ?
+                    selection.add(nodeId) :
+                    selection.set(nodeId));
     }
 
 
@@ -68,7 +88,7 @@ function Map({ onUpdate }) {
                 event.stopPropagation();
 
                 const node = nodes.find(node => node.id === draggingID);
-                const offset = new Vector2({x:position.x-node.x,y:position.y-node.y});
+                const offset = new Vector2({ x: position.x - node.x, y: position.y - node.y });
 
                 const moveNoves = selection.contains(node.id) ? selection.findAll(nodes) : [node];
 
