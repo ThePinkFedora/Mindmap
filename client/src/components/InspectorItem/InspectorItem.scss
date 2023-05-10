@@ -4,9 +4,16 @@
 
 .inspector-item{
     margin-bottom: 1.5rem;
+    max-height: 20rem;
     display: flex;
     flex-direction: column;
     width: 100%;
+    transition: max-height 0.6s ease-in-out;
+    overflow: hidden;
+
+    &--collapsed{
+        max-height: 2.5rem;
+    }
 
     &__header{
         position: relative;
@@ -36,5 +43,18 @@
     
     &__button{
         @include button;
+        margin-left: 0.25rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__collapse-icon{
+        height: 1lh;
+        transition: transform 0.4s ease;
+
+        &--collapsed{
+            transform: rotate(180deg);
+        }
     }
 }

@@ -1,5 +1,5 @@
 import './Workspace.scss';
-import { createContext, startTransition, useContext, useState } from 'react';
+import { createContext, startTransition, useCallback, useContext, useEffect, useState } from 'react';
 import { createNode, deleteLink, deleteNode, getLinks, getNodes, createLink, updateNode } from '../../js/api';
 import { Selections } from '../../js/nodemaps';
 import Inspector from '../Inspector/Inspector';
@@ -14,6 +14,15 @@ export const LinksContext = createContext(null);
 export const SelectionContext = createContext(null);
 export const WorkspaceContext = createContext(null);
 
+function save(nodes){
+    nodes.forEach(node => {
+        if(node.moved){
+            updateNode(1,node.id,node);
+            node.moved=false;
+        }
+    });
+}
+
 
 function Workspace() {
     const [nodes, setNodes] = useState(null);
@@ -26,37 +35,48 @@ function Workspace() {
     const [selection, setSelection] = useState(new Selections());
 
     ///Retrieve nodes and links
-    useState(() => {
+    useEffect(() => {
         getNodes(1)
             .then(nodeData => {
-                setNodes(nodeData.map((nd, index) => ({ ...nd, x: 375 + index * 175, y: 150 + Math.random() * 400 })))
+                setNodes(nodeData.map((nd, index) => ({ ...nd })))
             });
 
         retrieveLinks();
     }, []);
+    
 
     function retrieveLinks() {
         getLinks(1)
             .then(links => setLinks(links));
     }
 
+    const handleAutoSave = useCallback(() => {
+        save(nodes);
+    });
+
+    ///Autosave Effect
+    useEffect(()=>{
+        const interval = setInterval(handleAutoSave,5000);
+        return () => clearInterval(interval);
+    });
+
     /**
      * @param {Selections} newSelection 
      */
     const handleSelect = (newSelection) => {
-        // if(!newSelection.equals(selection)){
-            setSelection(newSelection.clone());
-        // }
+        setSelection(newSelection.clone());
     };
 
     const handleUpdate = (node) => {
         const original = nodes.find(n => n.id === node.id);
+        
         if (node.name !== original.name || node.description !== original.description) {
             updateNode(1, node.id, node)
                 .then(nodeData => {
                     setNodes(nodes.filter(n => n.id !== node.id).concat([{ ...nodeData, x: node.x, y: node.y }]));
                 })
         } else {
+            node.moved=true;
             setNodes(nodes.filter(n => n.id !== node.id).concat([node]));
         }
     };

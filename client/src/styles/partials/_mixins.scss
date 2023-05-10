@@ -45,3 +45,12 @@
         cursor: default;
     }
 }
+
+@mixin hyperlink{
+    color: colors.$primary-blue;
+    
+
+    &:hover{
+        text-decoration: underline;
+    }
+}

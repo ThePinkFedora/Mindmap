@@ -1,5 +1,6 @@
 import './EditableText.scss';
 import { useEffect, useRef, useState } from 'react';
+import editIcon from '../../assets/images/edit.svg';
 
 /**
  * 
@@ -70,7 +71,15 @@ function EditableText({type="textarea",name, value, placeholder, onChange,onEndE
                 onBlur={handleBlur} 
                 onChange={handleChange}></textarea>
             
-            {!editing && <p className={`editable-text__text ${type==="line" ? "editable-text__text--line" : ""}`} onClick={handleClick}>{currentValue}</p>}
+            {(!editing && ["textarea","line"].includes(type)) && <p className={`editable-text__text ${type==="line" ? "editable-text__text--line" : ""}`} onClick={handleClick}>{currentValue}</p>}
+            
+            {(!editing && type === "link") && 
+                <>
+                    <a className={`editable-text__text editable-text__text--link`} href={currentValue}>{currentValue}</a>
+                    <img className="editable-text__icon" src={editIcon} alt="edit" onClick={handleClick} />
+                </>
+            }
+            
         </div>
     );
 }

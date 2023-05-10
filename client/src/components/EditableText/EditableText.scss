@@ -1,5 +1,7 @@
 @use '../../styles/partials/colors';
 @use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins';
+
 
 
 .editable-text{
@@ -14,6 +16,13 @@
 
         &--line{
             @include font-label;
+        }
+
+        &--link{
+            @include mixins.hyperlink;
+            font-size: 1.15em;
+            margin-right: 0.25rem;
+
         }
     }
 
@@ -43,8 +52,28 @@
             min-height: unset;
         }
 
+        &--link{
+            white-space: nowrap;
+            padding: 0.25rem 0.5rem;
+            height: 1.5lh;
+            resize: none;
+            overflow: hidden;
+            min-height: unset;
+        }
+
         &::placeholder{
             color: colors.$text-dark;
+        }
+    }
+
+    &__icon{
+        cursor: pointer;
+        width: 1.1rem;
+        vertical-align: text-bottom;
+        border-radius: 0.25rem;
+
+        &:hover{
+            background-color: colors.$background-neutral-gray;
         }
     }
 }
