@@ -5,6 +5,7 @@
 
 .sidebar{
     @include common-box-shadow;
+    background-color: colors.$background-light-2;;
     height: 100%;
 }
 

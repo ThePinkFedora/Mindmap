@@ -5,12 +5,12 @@
 
 .inspector{
     @include common-box-shadow;
-    // width: 21.25rem;
-    // min-width: 21.25rem;
     color: colors.$text-dark;
+    background-color: colors.$background-light-2;
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
+    height: 100%;
 
     &__header{
         border-bottom: 1px solid colors.$divider;
@@ -29,11 +29,13 @@
     }
 
     &__content{
+        padding-top: 1rem;
+        padding-bottom: 50vh;
         width: 100%;
         max-width: 100%;
         height: 100%;
         overflow-y: auto;
-        padding-bottom: 50vh;
+        
     }
 
     &__field-list{

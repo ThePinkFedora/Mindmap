@@ -25,6 +25,7 @@
     }
 
     &__icon{
+        filter: invert(10%) sepia(68%) saturate(1536%) hue-rotate(199deg) brightness(95%) contrast(90%);
         position: absolute;
         left: -2.5rem;
         top: 0.5rem;

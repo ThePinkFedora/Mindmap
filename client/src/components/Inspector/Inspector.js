@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState,startTransition } from 'react';
+import { useContext, useEffect, useState, startTransition } from 'react';
 import './Inspector.scss';
 import { LinksContext, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
 import { Selections, Fields, Links } from '../../js/nodemaps';
@@ -6,18 +6,19 @@ import InspectorItem from '../InspectorItem/InspectorItem';
 import { createField, deleteField, getFields, updateField } from '../../js/api';
 import LinkList from '../LinkList/LinkList';
 import linkIcon from '../../assets/images/link.svg';
+import EditableText from '../EditableText/EditableText';
 
 
 /**
  * @param {object} props
  * @param {*} props.onUpdate
  */
-function Inspector({ onSelect,onUpdate }) {
+function Inspector({ onSelect, onUpdate }) {
     const nodes = useContext(NodesContext);
     /**@type {Selections} */
-    const {selection,setSelection} = useContext(SelectionContext);
+    const { selection, setSelection } = useContext(SelectionContext);
     const links = useContext(LinksContext);
-    const {workspace,setWorkspace} = useContext(WorkspaceContext);
+    const { workspace, setWorkspace } = useContext(WorkspaceContext);
     const selectedNodes = selection.ids.map(id => nodes.find(node => node.id === id));
 
     const [fields, setFields] = useState(null);
@@ -66,12 +67,12 @@ function Inspector({ onSelect,onUpdate }) {
 
     const handleLinkClick = (link_id) => {
         const link = links.find(link => link.id === link_id);
-        const linkNodes = Links.findNodes(link,nodes);
+        const linkNodes = Links.findNodes(link, nodes);
         const otherNode = linkNodes.find(n => !selection.contains(n.id));
         onSelect(selection.set(otherNode.id));
-        setWorkspace({...workspace,focus:otherNode.id});
+        setWorkspace({ ...workspace, focus: otherNode.id });
 
-        console.log({link,linkNodes,otherNode});
+        console.log({ link, linkNodes, otherNode });
     };
 
     const handleLinkDelete = (link_id) => {
@@ -81,10 +82,20 @@ function Inspector({ onSelect,onUpdate }) {
     return (
         <section className="inspector">
             <header className="inspector__header">
-                <h1 className="inspector__title">{selectedNodes.length === 0
-                    ? "Inspector"
-                    : selectedNodes.length === 1 ? <input type="text" name="name" className="inspector__title-field" value={selectedNodes[0].name} onChange={(event) => handleChange({ name: event.target.name, value: event.target.value }, "name")} />
-                        : `${selectedNodes.length} Nodes`}</h1>
+                <h1 className="inspector__title">{
+                    selectedNodes.length === 0
+                        ? "Inspector"
+                        : selectedNodes.length === 1 ?
+                            <EditableText 
+                                type="line" 
+                                name="name" 
+                                value={selectedNodes[0].name} 
+                                onEndEdit={(value) => handleChange({ name:"name",value }, "name")}
+                                fieldStyle={{fontSize: "1.5rem", lineHeight:"1",textAlign: "center",marginTop:"-0.3rem",marginBottom:"-0.4rem"}}
+                                textStyle={{fontSize: "1.5rem", lineHeight:"1"}}
+                            />
+                            : `${selectedNodes.length} Nodes`}
+                </h1>
             </header>
             <div className="inspector__content">
                 <ul className="inspector__field-list">
@@ -110,7 +121,7 @@ function Inspector({ onSelect,onUpdate }) {
                             </li>
                         ))}
                     </>}
-                    {selectedNodes.length===1 && 
+                    {selectedNodes.length === 1 &&
                         <li>
                             <div className="inspector-links">
                                 <div className="inspector-links__header">
@@ -121,7 +132,7 @@ function Inspector({ onSelect,onUpdate }) {
                                     <LinkList nodeId={selectedNodes[0].id} onClick={handleLinkClick} onRemove={handleLinkDelete} />
                                 </div>
                             </div>
-                            
+
                         </li>
                     }
                 </ul>

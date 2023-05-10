@@ -135,7 +135,6 @@ function Workspace() {
                                 </PanelGroup>
                                 <Tools onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
                             </Hotkeys>
-                            
                         </WorkspaceContext.Provider>
                     </SelectionContext.Provider>
                 </LinksContext.Provider>
