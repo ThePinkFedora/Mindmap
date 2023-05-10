@@ -12,7 +12,7 @@ function LinksPanel({ onSelect,onUnlink }) {
     /**@type {object[]} */
     const links = useContext(LinksContext);
     /**@type {Selections} */
-    const selection = useContext(SelectionContext);
+    const {selection,setSelection} = useContext(SelectionContext);
     /**@type {object[]} */
     const nodes = useContext(NodesContext);
     const {workspace,setWorkspace} = useContext(WorkspaceContext);

@@ -4,7 +4,7 @@ import {NodesContext, SelectionContext, WorkspaceContext} from '../Workspace/Wor
 
 function NodesPanel({onSelect}){
     const nodes = useContext(NodesContext);
-    const selection = useContext(SelectionContext);
+    const {selection,setSelection} = useContext(SelectionContext);
     const {workspace,setWorkspace} = useContext(WorkspaceContext);
 
     const handleSelect = (event,nodeId) => {

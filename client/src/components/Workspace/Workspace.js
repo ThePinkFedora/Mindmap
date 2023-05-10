@@ -40,8 +40,13 @@ function Workspace() {
             .then(links => setLinks(links));
     }
 
-    const handleSelect = (selection) => {
-        setSelection(selection.clone());
+    /**
+     * @param {Selections} newSelection 
+     */
+    const handleSelect = (newSelection) => {
+        // if(!newSelection.equals(selection)){
+            setSelection(newSelection.clone());
+        // }
     };
 
     const handleUpdate = (node) => {
@@ -91,7 +96,7 @@ function Workspace() {
         <main className="workspace">
             <NodesContext.Provider value={nodes}>
                 <LinksContext.Provider value={links}>
-                    <SelectionContext.Provider value={selection}>
+                    <SelectionContext.Provider value={{selection,setSelection:handleSelect}}>
                         <WorkspaceContext.Provider value={{ workspace, setWorkspace }}>
                             <Hotkeys onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink}>
                                 <Sidebar onSelect={handleSelect} onUnlink={handleUnlink} />

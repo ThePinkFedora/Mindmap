@@ -15,25 +15,25 @@ import linkIcon from '../../assets/images/link.svg';
 function Inspector({ onSelect,onUpdate }) {
     const nodes = useContext(NodesContext);
     /**@type {Selections} */
-    const selections = useContext(SelectionContext);
+    const {selection,setSelection} = useContext(SelectionContext);
     const links = useContext(LinksContext);
     const {workspace,setWorkspace} = useContext(WorkspaceContext);
-    const selectedNodes = selections.ids.map(id => nodes.find(node => node.id === id));
+    const selectedNodes = selection.ids.map(id => nodes.find(node => node.id === id));
 
     const [fields, setFields] = useState(null);
 
     useEffect(() => {
-        if (fields === null && selections.length) {
-            getFields(1, selections.ids[0])
+        if (fields === null && selection.length) {
+            getFields(1, selection.ids[0])
                 .then(fields => {
                     setFields(fields);
                 });
         }
-    }, [fields, selections.length]);
+    }, [fields, selection.length]);
 
     useEffect(() => {
         setFields(null);
-    }, [selections]);
+    }, [selection]);
 
     const handleChange = ({ name, value }, field_id) => {
         if (field_id === "name") {
@@ -45,7 +45,7 @@ function Inspector({ onSelect,onUpdate }) {
             // node.description = value;
             onUpdate({ ...node, description: value });
         } else {
-            updateField(1, selections.ids[0], field_id, { name, value })
+            updateField(1, selection.ids[0], field_id, { name, value })
                 .then(field => {
                     setFields(null);
                 });
@@ -67,8 +67,8 @@ function Inspector({ onSelect,onUpdate }) {
     const handleLinkClick = (link_id) => {
         const link = links.find(link => link.id === link_id);
         const linkNodes = Links.findNodes(link,nodes);
-        const otherNode = linkNodes.find(n => !selections.contains(n.id));
-        onSelect(selections.set(otherNode.id));
+        const otherNode = linkNodes.find(n => !selection.contains(n.id));
+        onSelect(selection.set(otherNode.id));
         setWorkspace({...workspace,focus:otherNode.id});
 
         console.log({link,linkNodes,otherNode});

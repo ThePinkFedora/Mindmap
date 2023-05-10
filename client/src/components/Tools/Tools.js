@@ -14,7 +14,7 @@ function Tools({ onAdd, onDelete, onLink, onUnlink }) {
     const nodes = useContext(NodesContext);
     const links = useContext(LinksContext);
     /** @type {Selections} */
-    const selection = useContext(SelectionContext);
+    const {selection,setSelection} = useContext(SelectionContext);
 
     const handleAdd = (event) => {
         onAdd();

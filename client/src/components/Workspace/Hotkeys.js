@@ -4,7 +4,7 @@ import { LinksContext, SelectionContext, WorkspaceContext } from "./Workspace";
 function Hotkeys({ children, onAdd, onDelete, onLink, onUnlink }) {
     const { workspace } = useContext(WorkspaceContext);
     const links = useContext(LinksContext);
-    const selection = useContext(SelectionContext);
+    const {selection,setSelection} = useContext(SelectionContext);
 
     // const onAddCallback = useCallback(onAdd, []);
     // const onDeleteCallback = useCallback(onDelete, []);

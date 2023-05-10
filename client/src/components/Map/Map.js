@@ -7,6 +7,7 @@ import { Selections, Lines, LineObject } from '../../js/nodemaps';
 import { useRef } from 'react';
 import Line from '../Line/Line';
 import { VectorMath } from '../../js/math';
+import SelectionRect from '../SelectionRect/SelectionRect';
 
 
 const nodeSize = 48;
@@ -20,7 +21,7 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
     const nodes = useContext(NodesContext);
     const links = useContext(LinksContext);
     /** @type {Selections} */
-    const selection = useContext(SelectionContext);
+    const {selection,setSelection} = useContext(SelectionContext);
     const { workspace, setWorkspace } = useContext(WorkspaceContext);
     const [draggingID, setDraggingID] = useState(null);
     const transformWrapperRef = useRef(null);
@@ -28,13 +29,13 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
     //Focus effect
     useEffect(() => {
         if (workspace.focus) {
-            
 
-            const focusNodes = 
-                Array.isArray(workspace.focus) 
+
+            const focusNodes =
+                Array.isArray(workspace.focus)
                     ? nodes.filter(node => workspace.focus.includes(node.id))
                     : [nodes.find(node => node.id === workspace.focus)];
-            
+
 
             const focusAverage = VectorMath.average(focusNodes);
 
@@ -57,12 +58,12 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
      * @param {import('react').MouseEvent} event 
      * @param {{x: number, y:number}} position - The position of the cursor relative to the sheet
      */
-    const handleMouseMove = (event,position) => {
+    const handleMouseMove = (event, position) => {
         setWorkspace({ ...workspace, cursorX: position.x, cursorY: position.y });
         if (event.buttons === 1) {
             if (draggingID) {
                 event.stopPropagation();
-                
+
                 const node = nodes.find(node => node.id === draggingID);
                 node.x = position.x;
                 node.y = position.y;
@@ -79,10 +80,10 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
         <section className="map"  >
             <TransformWrapper ref={transformWrapperRef} panning={{ disabled: draggingID !== null }} minScale={0.25}>
                 <TransformComponent wrapperStyle={{ width: "100%", height: "100%", }}  >
-                    <Sheet 
-                        selection={selection} 
-                        onSelect={onSelect} 
-                        workspace={workspace} 
+                    <Sheet
+                        selection={selection}
+                        onSelect={onSelect}
+                        workspace={workspace}
                         setWorkspace={setWorkspace}
                         onMouseMove={handleMouseMove}
                     >
@@ -106,10 +107,10 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
  * @param {object} props
  * @param {Selection} props.selection
  */
-function Sheet({ children, selection, onSelect, workspace, setWorkspace,onMouseMove }) {
+function Sheet({ children, selection, onSelect, workspace, setWorkspace, onMouseMove }) {
     const sheetRef = useRef(null);
     const transformStateRef = useRef({ previousScale: 1, scale: 1, positionX: 0, positionY: 0 });
-    
+
 
     useTransformEffect(({ state, instance }) => {
         // console.log(state); // { previousScale: 1, scale: 1, positionX: 0, positionY: 0 }
@@ -125,7 +126,7 @@ function Sheet({ children, selection, onSelect, workspace, setWorkspace,onMouseM
      */
     const handleBackgroundClick = (event) => {
         //If there's any selection, clear it
-        if(selection.length){
+        if (selection.length) {
             onSelect(selection.set(null));
         }
         //If there's a focus, clear it
@@ -142,7 +143,7 @@ function Sheet({ children, selection, onSelect, workspace, setWorkspace,onMouseM
             x: (event.clientX - rect.x - nodeSize / 2) / scale,
             y: (event.clientY - rect.y - nodeSize / 2) / scale
         };
-        onMouseMove(event,position);
+        onMouseMove(event, position);
     };
 
     return (
@@ -152,7 +153,9 @@ function Sheet({ children, selection, onSelect, workspace, setWorkspace,onMouseM
             onClick={handleBackgroundClick}
             onMouseMove={handleMouseMove}
         >
-            {children}
+            <SelectionRect>
+                {children}
+            </SelectionRect>
         </div>
     );
 }
