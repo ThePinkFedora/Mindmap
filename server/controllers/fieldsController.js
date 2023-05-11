@@ -3,12 +3,12 @@ const knex = require("knex");
 const db = knex(knexConfig);
 const { v4 } = require('uuid');
 
-const dbName = 'field';
+const tableName = 'field';
 
 module.exports = {
     getAll: async (req, res) => {
         try {
-            const results = await db(dbName);
+            const results = await db(tableName);
             res.json(results);
         } catch (error) {
             console.error(error);
@@ -18,7 +18,7 @@ module.exports = {
     getAllForNode: async (req, res) => {
         const { nodeId } = req.params; //node id
         try {
-            const results = await db(dbName).where({ node_id: nodeId });
+            const results = await db(tableName).where({ node_id: nodeId });
             res.json({ results });
         } catch (error) {
             console.error(error);
@@ -28,7 +28,7 @@ module.exports = {
     getSingle: async (req, res) => {
         const { fieldId } = req.params;
         try {
-            const result = await db(dbName).where({ id: fieldId });
+            const result = await db(tableName).where({ id: fieldId });
             if (result.length > 0) {
                 const item = result[0];
                 res.json(item);
@@ -55,8 +55,8 @@ module.exports = {
 
         try {
             const id = v4();
-            await db(dbName).insert({ id, node_id: nodeId, type, name, value });
-            const results = await db(dbName).where({ id });
+            await db(tableName).insert({ id, node_id: nodeId, type, name, value });
+            const results = await db(tableName).where({ id });
             if (results.length > 0) {
                 res.status(201).json(results[0]);
             } else {
@@ -71,9 +71,9 @@ module.exports = {
         const { fieldId } = req.params;
         const { type, name, value } = req.body;
         try {
-            const updates = await db(dbName).where({ id: fieldId }).update({ type, name, value });
+            const updates = await db(tableName).where({ id: fieldId }).update({ type, name, value });
             if (updates) {
-                const results = await db(dbName).where({ id: fieldId });
+                const results = await db(tableName).where({ id: fieldId });
                 res.json(results[0]);
             } else {
                 res.status(404).send('Field not found');
@@ -86,7 +86,7 @@ module.exports = {
     delete: async (req, res) => {
         const { fieldId } = req.params;
         try {
-            const updates = await db(dbName).where({ id: fieldId }).del();
+            const updates = await db(tableName).where({ id: fieldId }).del();
             if (updates) {
                 res.status(200).json({success: true});
             } else {
