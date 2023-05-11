@@ -1,0 +1,21 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/mixins' as *;
+
+.workspace{
+    background-color: colors.$background-light;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+}
+
+.workspace-panels{
+
+    &__panel{
+        height: 100%;
+
+    }
+    &__resize-handle{
+        background-color: colors.$secondary-gray;
+        width: 0.5rem;
+    }
+}

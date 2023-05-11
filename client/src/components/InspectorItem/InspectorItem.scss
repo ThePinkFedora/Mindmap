@@ -1,0 +1,61 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins' as *;
+
+.inspector-item{
+    margin-bottom: 1.5rem;
+    max-height: 20rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    transition: max-height 0.6s ease-in-out;
+    overflow: hidden;
+
+    &--collapsed{
+        max-height: 2.5rem;
+    }
+
+    &__header{
+        position: relative;
+        margin: 0 0 0.25rem 2.5rem;
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        height: 2.5rem;
+    }
+
+    &__icon{
+        filter: invert(10%) sepia(68%) saturate(1536%) hue-rotate(199deg) brightness(95%) contrast(90%);
+        position: absolute;
+        left: -2.5rem;
+        top: 0.5rem;
+        width: 1.5rem;
+    }
+
+    &__title{
+        @include font-label;
+        margin-right: auto;
+    }
+
+    &__content{
+        margin-left: 2.5rem;
+        
+    }
+    
+    &__button{
+        @include button;
+        margin-left: 0.25rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__collapse-icon{
+        height: 1lh;
+        transition: transform 0.4s ease;
+
+        &--collapsed{
+            transform: rotate(180deg);
+        }
+    }
+}

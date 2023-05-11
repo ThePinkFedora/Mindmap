@@ -1,0 +1,38 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/fonts';
+@use '../../styles/partials/mixins' as *;
+
+.nodes-panel{
+
+    &__header{
+        border-bottom: 1px solid colors.$divider;
+        padding: 0.875rem;
+    }
+
+    &__search{
+        @include input-field;
+    }
+}
+
+.node-list{
+    padding: 0.5rem 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 75vh;
+
+    &__item{
+        padding: 0.5rem 0.75rem;
+        cursor: pointer;
+
+        &:hover:not(&--selected){
+            background-color: colors.$secondary-gray;
+        }
+
+        &--selected{
+            color: colors.$primary-blue;
+            background-color: colors.$background-selected;
+
+        }
+    }
+}

@@ -1,0 +1,55 @@
+@use "../../styles/partials/colors";
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/fonts" as *;
+
+.node {
+  text-align: center;
+  user-select: none;
+  background-color: colors.$primary-blue;
+  border-radius: 50%;
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  position: absolute;
+  border-radius: 50%;
+  box-shadow: 0 0 7px 7px #52fefe55;
+  // border: 1px solid #297e7e;
+  transition: box-shadow 0.2s ease, background-color 0.4s ease;
+  cursor: pointer;
+
+  &:hover{
+    background-color: mix(colors.$primary-blue,#52fefe);
+  }
+
+  &--selected{
+    background-color: #E5DB00;
+    box-shadow: 0 0 10px 10px #ffff00AA;
+    border: none;
+  }
+
+  &__inner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 0px 0px 15px #52fefe inset;
+    transition: box-shadow 0.2s ease;
+
+    &--selected{
+        box-shadow: 0px 0px 30px #ffff00 inset;
+    }
+  }
+
+  &__label {
+    font-weight: 600;
+    position: absolute;
+    left: 50%;
+    margin-top: 3.25rem;
+    width: 225%;
+    transform: translate(-50%);
+    pointer-events: none;
+  }
+}

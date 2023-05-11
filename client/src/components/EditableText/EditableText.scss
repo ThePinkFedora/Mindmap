@@ -1,0 +1,79 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins';
+
+
+
+.editable-text{
+    // width: auto;
+    width: 100%;
+
+
+    &__text{
+        @include font-field;
+        width: 100%;
+        white-space: pre-wrap;
+
+        &--line{
+            @include font-label;
+        }
+
+        &--link{
+            @include mixins.hyperlink;
+            font-size: 1.15em;
+            margin-right: 0.25rem;
+
+        }
+    }
+
+    &__textarea{
+        @include font-field;
+        color: colors.$text-dark;
+        background-color: colors.$background-neutral-gray;
+        border: none;
+        border-radius: 0.25rem;
+        resize: vertical;
+        outline: none;
+        padding: 0.5rem;
+        width: 100%;
+        min-height: 8rem;
+
+        &--hidden{
+            display: none;
+        }
+
+        &--line{
+            @include font-label;
+            white-space: nowrap;
+            padding: 0.25rem 0.5rem;
+            height: 1.5lh;
+            resize: none;
+            overflow: hidden;
+            min-height: unset;
+        }
+
+        &--link{
+            white-space: nowrap;
+            padding: 0.25rem 0.5rem;
+            height: 1.5lh;
+            resize: none;
+            overflow: hidden;
+            min-height: unset;
+        }
+
+        &::placeholder{
+            color: colors.$text-dark;
+        }
+    }
+
+    &__icon{
+        cursor: pointer;
+        width: 1.1rem;
+        vertical-align: text-bottom;
+        border-radius: 0.25rem;
+
+        &:hover{
+            background-color: colors.$background-neutral-gray;
+        }
+    }
+}
