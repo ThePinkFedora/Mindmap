@@ -1,0 +1,13 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins' as *;
+
+.inspector-header{
+    border-bottom: 1px solid colors.$divider;
+    
+    &__title{
+        text-align: center;
+        @include font-section-header;
+        padding: 0.875rem;
+    }
+}

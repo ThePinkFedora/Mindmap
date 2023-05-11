@@ -158,7 +158,7 @@ export class Field {
 }
 
 export class Lines {
-  static createLines(nodeSize,links,nodes) {
+  static createLines(links,nodes) {
     return links.map(link => {
       const a = nodes.find(node => node.id === link.node_a_id);
       const b = nodes.find(node => node.id === link.node_b_id);
@@ -166,7 +166,7 @@ export class Lines {
         console.error("Link is missing node");
         return new LineObject(100,100,200,100);
       }
-      return new LineObject(a.x + nodeSize / 2, a.y + nodeSize / 2, b.x + nodeSize / 2, b.y + nodeSize / 2);
+      return new LineObject(a.x, a.y, b.x, b.y);
     })
   }
 }

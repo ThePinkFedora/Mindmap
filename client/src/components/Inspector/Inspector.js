@@ -6,7 +6,9 @@ import InspectorItem from '../InspectorItem/InspectorItem';
 import { createField, deleteField, getFields, updateField } from '../../js/api';
 import LinkList from '../LinkList/LinkList';
 import linkIcon from '../../assets/images/link.svg';
-import EditableText from '../EditableText/EditableText';
+import InspectorHeader from './InspectorHeader';
+import AddField from './AddField';
+import { findAndReplace } from '../../js/utils';
 
 
 /**
@@ -39,27 +41,18 @@ function Inspector({ onSelect, onUpdate }) {
     const handleChange = ({ name, value }, field_id) => {
         if (field_id === "name") {
             const node = selectedNodes[0];
-            // node.name = value;
             onUpdate({ ...node, name: value });
         } else if (field_id === "description") {
             const node = selectedNodes[0];
-            // node.description = value;
             onUpdate({ ...node, description: value });
         } else {
             updateField(1, selection.ids[0], field_id, { name, value })
                 .then(field => {
-                    setFields(null);
+                    setFields(fields => [...fields,field]);
                 });
         }
     };
     
-    const handleAddField = (type) => {
-        createField(null, selectedNodes[0].id, type)
-            .then(field => {
-                setFields(null); ///Force fields to reload
-            });
-    };
-
     const handleDelete = (field_id) => {
         deleteField(1, selectedNodes[0].id, field_id)
             .then(res => setFields(fields.filter(field => field.id !== field_id)));
@@ -81,22 +74,7 @@ function Inspector({ onSelect, onUpdate }) {
 
     return (
         <section className="inspector">
-            <header className="inspector__header">
-                <h1 className="inspector__title">{
-                    selectedNodes.length === 0
-                        ? "Inspector"
-                        : selectedNodes.length === 1 ?
-                            <EditableText 
-                                type="line" 
-                                name="name" 
-                                value={selectedNodes[0].name} 
-                                onEndEdit={(value) => handleChange({ name:"name",value }, "name")}
-                                fieldStyle={{fontSize: "1.5rem", lineHeight:"1",textAlign: "center",marginTop:"-0.3rem",marginBottom:"-0.4rem"}}
-                                textStyle={{fontSize: "1.5rem", lineHeight:"1"}}
-                            />
-                            : `${selectedNodes.length} Nodes`}
-                </h1>
-            </header>
+            <InspectorHeader selectedNodes={selectedNodes} onChange={handleChange}/>
             <div className="inspector__content">
                 <ul className="inspector__field-list">
                     {selectedNodes.length === 1 && <>
@@ -136,32 +114,16 @@ function Inspector({ onSelect, onUpdate }) {
                         </li>
                     }
                 </ul>
-                {selectedNodes.length === 1 && <AddField onAddField={handleAddField} />}
+                
+            </div>
+            <div className="inspector__footer">
+                
+                {selectedNodes.length === 1 && <AddField selectedNodes={selectedNodes} setFields={setFields} />}
             </div>
         </section>
     );
 }
 
-/**
- * @param {object} props 
- * @param {(type:string=>{})} props.onAddField 
- */
-function AddField({ onAddField }) {
-    return (
-        <div className="add-field">
-            <h2 className="add-field__title">Add Field</h2>
-            <div className="add-field__list">
-                {Fields.eachType.map(typeData =>
-                    <button key={typeData.type} className="add-field__button" onClick={() => onAddField(typeData.type)}>
-                        <img className="add-field__icon" src={typeData.icon} alt={typeData.alt} />
-                        {typeData.name}
-                    </button>
-                )}
 
-            </div>
-
-        </div>
-    );
-}
 
 export default Inspector;

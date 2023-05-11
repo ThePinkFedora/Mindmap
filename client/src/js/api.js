@@ -182,3 +182,14 @@ export async function deleteField(map_id,node_id,field_id){
         throw error;
     }
 }
+
+
+export async function searchNodes(map_id,query){
+    try{
+        const response = await axios.get(`${config.baseUrl}/maps/${map_id}/node-search/?query=${query}`);
+        return response.data;
+    }catch(error){
+        console.error("Error during searchNodes");
+        throw error;
+    }
+}

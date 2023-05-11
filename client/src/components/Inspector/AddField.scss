@@ -1,0 +1,31 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins' as *;
+
+.add-field{
+    border-top: 1px solid colors.$divider;
+    padding: 0.5rem 1rem 0;
+
+    &__title{
+        @include font-subheader;
+    }
+
+    &__list{
+        margin-right: 1rem;
+        padding: 0.75rem 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    &__button{
+        @include button;
+        display: flex;
+        align-items: center;
+    }
+
+    &__icon{
+        width: 1rem;
+        margin-right: 0.5rem;
+    }
+}
