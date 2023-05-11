@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
 import './Inspector.scss';
 import { LinksContext, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
-import {Fields, Links } from '../../js/nodemaps';
+import { Links } from '../../js/nodemaps';
 import InspectorItem from '../InspectorItem/InspectorItem';
-import { createField, deleteField, getFields, updateField } from '../../js/api';
+import {  deleteField, getFields, updateField } from '../../js/api';
 import LinkList from '../LinkList/LinkList';
 import linkIcon from '../../assets/images/link.svg';
 import InspectorHeader from './InspectorHeader';
 import AddField from './AddField';
-import { findAndReplace } from '../../js/utils';
+// import { findAndReplace } from '../../js/utils';
 
 
 /**
