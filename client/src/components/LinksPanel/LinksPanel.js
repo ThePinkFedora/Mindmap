@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import './LinksPanel.scss';
 import { LinksContext, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
-import { Links, Selections } from '../../js/nodemaps';
+import { Links } from '../../js/nodemaps';
 
 /**
  * @param {object} props
@@ -11,8 +11,8 @@ import { Links, Selections } from '../../js/nodemaps';
 function LinksPanel({ onSelect,onUnlink }) {
     /**@type {object[]} */
     const links = useContext(LinksContext);
-    /**@type {Selections} */
-    const {selection,setSelection} = useContext(SelectionContext);
+    /** @type {{selection:import('../../js/nodemaps').Selections}} */ 
+    const {selection} = useContext(SelectionContext);
     /**@type {object[]} */
     const nodes = useContext(NodesContext);
     const {workspace,setWorkspace} = useContext(WorkspaceContext);

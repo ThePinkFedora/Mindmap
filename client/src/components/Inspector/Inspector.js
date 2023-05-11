@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState, startTransition } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './Inspector.scss';
 import { LinksContext, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
-import { Selections, Fields, Links } from '../../js/nodemaps';
+import {Fields, Links } from '../../js/nodemaps';
 import InspectorItem from '../InspectorItem/InspectorItem';
 import { createField, deleteField, getFields, updateField } from '../../js/api';
 import LinkList from '../LinkList/LinkList';
@@ -15,8 +15,8 @@ import EditableText from '../EditableText/EditableText';
  */
 function Inspector({ onSelect, onUpdate }) {
     const nodes = useContext(NodesContext);
-    /**@type {Selections} */
-    const { selection, setSelection } = useContext(SelectionContext);
+    /** @type {{selection:import('../../js/nodemaps').Selections}} */ 
+    const { selection } = useContext(SelectionContext);
     const links = useContext(LinksContext);
     const { workspace, setWorkspace } = useContext(WorkspaceContext);
     const selectedNodes = selection.ids.map(id => nodes.find(node => node.id === id));
@@ -30,7 +30,7 @@ function Inspector({ onSelect, onUpdate }) {
                     setFields(fields);
                 });
         }
-    }, [fields, selection.length]);
+    }, [fields, selection]);
 
     useEffect(() => {
         setFields(null);
@@ -52,7 +52,7 @@ function Inspector({ onSelect, onUpdate }) {
                 });
         }
     };
-
+    
     const handleAddField = (type) => {
         createField(null, selectedNodes[0].id, type)
             .then(field => {

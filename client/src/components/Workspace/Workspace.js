@@ -1,5 +1,5 @@
 import './Workspace.scss';
-import { createContext, startTransition, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import { createNode, deleteLink, deleteNode, getLinks, getNodes, createLink, updateNode } from '../../js/api';
 import { Selections } from '../../js/nodemaps';
 import Inspector from '../Inspector/Inspector';
@@ -53,7 +53,7 @@ function Workspace() {
 
     const handleAutoSave = useCallback(() => {
         save(nodes);
-    });
+    },[nodes]);
 
     ///Autosave Effect
     useEffect(() => {
@@ -142,15 +142,5 @@ function Workspace() {
         </main>
     );
 }
-
-function MyProviders({ children }) {
-    return (
-        <>
-            {children}
-        </>
-    );
-}
-
-
 
 export default Workspace;

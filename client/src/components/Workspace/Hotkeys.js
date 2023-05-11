@@ -1,10 +1,10 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { LinksContext, SelectionContext, WorkspaceContext } from "./Workspace";
 
 function Hotkeys({ children, onAdd, onDelete, onLink, onUnlink }) {
     const { workspace } = useContext(WorkspaceContext);
     const links = useContext(LinksContext);
-    const {selection,setSelection} = useContext(SelectionContext);
+    const {selection} = useContext(SelectionContext);
 
     // const onAddCallback = useCallback(onAdd, []);
     // const onDeleteCallback = useCallback(onDelete, []);
@@ -37,9 +37,11 @@ function Hotkeys({ children, onAdd, onDelete, onLink, onUnlink }) {
                     onUnlink(link.id);
                 }
                 break;
+            default:
+                break;
 
         }
-    });
+    },[links,onAdd,onDelete,onLink,onUnlink,selection,workspace]);
 
 
 
