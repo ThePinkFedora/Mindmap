@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './NodesPanel.scss';
 import { NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
 import { searchNodes } from '../../js/api';
