@@ -8,7 +8,7 @@ import LinkList from '../LinkList/LinkList';
 import linkIcon from '../../assets/images/link.svg';
 import InspectorHeader from './InspectorHeader';
 import AddField from './AddField';
-// import { findAndReplace } from '../../js/utils';
+import { findAndReplace } from '../../js/utils';
 
 
 /**
@@ -48,7 +48,7 @@ function Inspector({ onSelect, onUpdate }) {
         } else {
             updateField(1, selection.ids[0], field_id, { name, value })
                 .then(field => {
-                    setFields(fields => [...fields,field]);
+                    setFields(fields => findAndReplace([...fields],field,f => f.id===field.id));
                 });
         }
     };
