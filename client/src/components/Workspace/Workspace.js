@@ -123,15 +123,16 @@ function Workspace() {
                         <WorkspaceContext.Provider value={{ workspace, setWorkspace }}>
                             <Hotkeys onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink}>
                                 <PanelGroup className="workspace-panels" autoSaveId="workspacePanels" direction="horizontal">
-                                    <Panel className="workspace-panels__panel" defaultSize={20} minSize={20}>
+                                    <Panel className="workspace-panels__panel" defaultSize={20} minSize={15}>
                                         <Sidebar onSelect={handleSelect} onUnlink={handleUnlink} />
                                     </Panel>
                                     <PanelResizeHandle className="workspace-panels__resize-handle"/>
                                     <Panel className="workspace-panels__panel" minSize={30}>
+                                        
                                         <Map onSelect={handleSelect} onUpdate={handleUpdate} onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
                                     </Panel>
                                     <PanelResizeHandle className="workspace-panels__resize-handle"/>
-                                    <Panel className="workspace-panels__panel" defaultSize={20} minSize={20}>
+                                    <Panel className="workspace-panels__panel" defaultSize={20} minSize={18}>
                                         <Inspector onSelect={handleSelect} onUpdate={handleUpdate} />
                                     </Panel>
                                 </PanelGroup>
