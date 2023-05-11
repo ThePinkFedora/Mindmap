@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import './Map.scss';
-import { TransformWrapper, TransformComponent, useTransformContext, useTransformEffect } from "react-zoom-pan-pinch";
+import { TransformWrapper, TransformComponent, useTransformEffect } from "react-zoom-pan-pinch";
 import { LinksContext, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
 import Node from '../Node/Node';
-import { Selections, Lines, LineObject } from '../../js/nodemaps';
+import {  Lines } from '../../js/nodemaps';
 import { useRef } from 'react';
 import Line from '../Line/Line';
 import { VectorMath } from '../../js/math';
@@ -17,11 +17,11 @@ const nodeSize = 48;
  * @param {(selections:Selections)=>{}} props.onSelect
  * @returns 
  */
-function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
+function Map({ onSelect, onUpdate }) {
     const nodes = useContext(NodesContext);
     const links = useContext(LinksContext);
-    /** @type {Selections} */
-    const {selection,setSelection} = useContext(SelectionContext);
+    /** @type {{selection:import('../../js/nodemaps').Selections}} */ 
+    const {selection} = useContext(SelectionContext);
     const { workspace, setWorkspace } = useContext(WorkspaceContext);
     const [draggingID, setDraggingID] = useState(null);
     const transformWrapperRef = useRef(null);
@@ -42,9 +42,9 @@ function Map({ onSelect, onUpdate, onAdd, onDelete, onLink, onUnlink }) {
             const rect = transformWrapperRef.current.instance.wrapperComponent.getBoundingClientRect();
             transformWrapperRef.current.setTransform(-focusAverage.x + rect.width / 2, -focusAverage.y + rect.height / 2, 1, 300, "easeOut");
         
-            console.log({focusAverage,rect});
+            // console.log({focusAverage,rect});
         }
-    }, [workspace.focus]);
+    }, [nodes,workspace.focus]);
 
     /**
      * @param {import('react').MouseEvent} event 
@@ -115,11 +115,8 @@ function Sheet({ children, selection, onSelect, workspace, setWorkspace, onMouse
 
 
     useTransformEffect(({ state, instance }) => {
-        // console.log(state); // { previousScale: 1, scale: 1, positionX: 0, positionY: 0 }
 
         transformStateRef.current = state;
-
-        console.log({transformState:state});
         return () => {
             // unmount
         };

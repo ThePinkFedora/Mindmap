@@ -46,7 +46,7 @@ export class Selections {
       id.forEach(id => this.remove(id));
       return this;
     }
-    this.ids = this.ids.filter(idEl => idEl != id);
+    this.ids = this.ids.filter(idEl => idEl !== id);
     return this;
   }
   /**
@@ -175,7 +175,7 @@ export class LineObject {
   startX;
   startY;
   endX;
-  endX;
+  endY;
   constructor(startX, startY, endX, endY) {
     [this.startX, this.startY, this.endX, this.endY] = [startX, startY, endX, endY];
   }

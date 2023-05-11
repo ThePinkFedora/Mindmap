@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import './Tools.scss';
-import { LinksContext, NodesContext, SelectionContext } from '../Workspace/Workspace';
-import { Selections } from '../../js/nodemaps';
+import { LinksContext/*, NodesContext*/, SelectionContext } from '../Workspace/Workspace';
+// import { Selections } from '../../js/nodemaps';
 
 /**
  * @param {object} props 
@@ -11,10 +11,12 @@ import { Selections } from '../../js/nodemaps';
  * @param {onUnlink} props
  */
 function Tools({ onAdd, onDelete, onLink, onUnlink }) {
-    const nodes = useContext(NodesContext);
+    // const nodes = useContext(NodesContext);
     const links = useContext(LinksContext);
-    /** @type {Selections} */
-    const {selection,setSelection} = useContext(SelectionContext);
+    /** @type {{selection:import('../../js/nodemaps').Selections}} */ 
+    const {
+        selection
+    } = useContext(SelectionContext);
 
     const handleAdd = (event) => {
         onAdd();
