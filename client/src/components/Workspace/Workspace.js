@@ -31,7 +31,9 @@ function Workspace() {
     const [workspace, setWorkspace] = useState({
         focus: null,
         cursorX: 0,
-        cursorY: 0
+        cursorY: 0,
+        panningX: 0,
+        panningY: 0
     });
     const [selection, setSelection] = useState(new Selections());
 

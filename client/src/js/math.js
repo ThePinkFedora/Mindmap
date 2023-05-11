@@ -15,6 +15,13 @@ export class VectorMath{
         const sum = vectors.reduce((acc,cur) => ({x:acc.x+cur.x,y:acc.y+cur.y}),{x:0,y:0});
         return new Vector2({x: sum.x/vectors.length,y:sum.y/vectors.length});
     }
+
+    /**
+     * @param {Vector2} v2 
+     */
+    static scale(v2,scale){
+        return new Vector2({x:v2.x*scale,y:v2.y*scale});
+    }
 }
 
 
