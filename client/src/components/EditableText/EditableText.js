@@ -91,7 +91,7 @@ function EditableText({ type = "textarea", name, value, placeholder, onChange, o
             {(!editing && type === "link") &&
                 <>
                     <a className={`editable-text__text editable-text__text--link`} href={currentValue}>{currentValue}</a>
-                    <img className="editable-text__icon" src={editIcon} alt="edit" onClick={handleClick} />
+                    {currentValue && <img className="editable-text__icon" src={editIcon} alt="edit" onClick={handleClick} />}
                 </>
             }
 
