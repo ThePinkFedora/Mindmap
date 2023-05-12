@@ -11,7 +11,7 @@ function NodesPanel({ onSelect }) {
     const [queryResult, setQueryResults] = useState(null);
 
     useEffect(() => {
-        if(!query){
+        if (!query) {
             setQueryResults(null);
             return;
         }
@@ -19,8 +19,8 @@ function NodesPanel({ onSelect }) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if(!query)return;
-        searchNodes(1, query)
+        if (!query) return;
+        searchNodes(workspace.id, query)
             .then(result => {
                 setQueryResults(result.results);
             });
@@ -80,10 +80,10 @@ function ResultCard({ resultItem, query }) {
             <h3 className="result-card__title">{resultItem.node_name}</h3>
             <div className="result-card__body">
                 {resultItem.matches.map(item => (
-                    <div key={resultItem.node_id+item.name+item.type} className="result-card__match">
+                    <div key={resultItem.node_id + item.name + item.type} className="result-card__match">
                         {item.type !== "node" && <h4 className="result-card__match-title">{item.name}: </h4>}
                         <p className="result-card__match-value">{item.value.length > maxLength ? item.value.substring(0, maxLength) + "..." : item.value}</p>
-                        
+
                     </div>
                 ))}
             </div>

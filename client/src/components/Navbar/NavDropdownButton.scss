@@ -1,0 +1,28 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins' as *;
+
+
+.nav-dropdown-button{
+    background-color: transparent;
+    border: none;
+    border-radius: 0.25rem;
+    margin: 0.25rem 0.5rem;
+    padding: 0.375rem 0.5rem;
+    cursor: pointer;
+    display: flex;
+
+    &:hover{
+        background-color: #FFFFFF22;
+    }
+
+    &--open{
+        background-color: adjust-color(colors.$secondary-blue,  $alpha: -0.75) ;
+    }
+
+    &__arrow-icon{
+        margin-left: 0.5rem;
+        height: 100%;
+        filter: invert(100%);
+    }
+}
