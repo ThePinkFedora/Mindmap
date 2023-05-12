@@ -1,8 +1,8 @@
-const router = require('express').Router({mergeParams: true});
+const router = require('express').Router({ mergeParams: true });
 const controller = require('../controllers/linksController');
 
 router.route("/")
-    .get(controller.getAll)
+    .get(controller.getAllForMap)
     .post(controller.create);
 
 router.route("/:linkId")

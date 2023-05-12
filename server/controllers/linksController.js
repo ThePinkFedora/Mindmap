@@ -16,6 +16,21 @@ module.exports = {
             res.sendStatus(500);
         }
     },
+    getAllForMap: async (req, res) => {
+        const { mapId } = req.params;
+        try {
+            const results = await db(tableName)
+                .select('link.id', 'link.node_a_id', 'link.node_b_id', 'node1.name as node_a_name', 'node2.name as node_b_name')
+                .join('node as node1', 'link.node_a_id', 'node1.id')
+                .join('node as node2', 'link.node_b_id', 'node2.id')
+                .where({ "node1.map_id": mapId });
+
+            res.json({ results });
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        }
+    },
     getAllForNode: async (req, res) => {
         const { nodeId } = req.params; //node id
         try {
