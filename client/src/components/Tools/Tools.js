@@ -1,6 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import './Tools.scss';
 import { LinksContext/*, NodesContext*/, SelectionContext } from '../Workspace/Workspace';
+import addIcon from '../../assets/images/add.svg';
+import removeIcon from '../../assets/images/remove.svg';
+import linkIcon from '../../assets/images/link.svg';
+import unlinkIcon from '../../assets/images/unlink.svg';
+
 // import { Selections } from '../../js/nodemaps';
 
 /**
@@ -11,9 +16,8 @@ import { LinksContext/*, NodesContext*/, SelectionContext } from '../Workspace/W
  * @param {onUnlink} props
  */
 function Tools({ onAdd, onDelete, onLink, onUnlink }) {
-    // const nodes = useContext(NodesContext);
     const links = useContext(LinksContext);
-    /** @type {{selection:import('../../js/nodemaps').Selections}} */ 
+    /** @type {{selection:import('../../js/nodemaps').Selections}} */
     const {
         selection
     } = useContext(SelectionContext);
@@ -45,22 +49,22 @@ function Tools({ onAdd, onDelete, onLink, onUnlink }) {
                     <ul className="tools__list">
                         <li className="tools__item">
                             <button className='tools__button' onClick={handleAdd}>
-                                Add
+                                <img className="tools__icon" src={addIcon} alt="add" /> Add Node
                             </button>
                         </li>
                         <li className="tools__item">
                             <button className='tools__button' onClick={handleDelete} disabled={!selection.length}>
-                                Delete
+                                <img className="tools__icon" src={removeIcon} alt="remove" /> Delete Node
                             </button>
                         </li>
                         <li className="tools__item">
                             <button className='tools__button' onClick={handleLink} disabled={selection.length !== 2}>
-                                Link
+                                <img className="tools__icon" src={linkIcon} alt="link" /> Link Nodes
                             </button>
                         </li>
                         <li className="tools__item">
                             <button className='tools__button' onClick={handleUnlink} disabled={selection.length !== 2}>
-                                Unlink
+                                <img className="tools__icon" src={unlinkIcon} alt="unlink" /> Unlink Nodes
                             </button>
                         </li>
                     </ul>

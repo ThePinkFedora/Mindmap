@@ -132,13 +132,14 @@ function Workspace({ workspaceId }) {
                                     <Panel className="workspace-panels__panel" minSize={30}>
 
                                         <Map onSelect={handleSelect} onUpdate={handleUpdate} onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
+                                        <Tools onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
                                     </Panel>
                                     <PanelResizeHandle className="workspace-panels__resize-handle" />
                                     <Panel className="workspace-panels__panel" defaultSize={20} minSize={18}>
                                         <Inspector onSelect={handleSelect} onUpdate={handleUpdate} />
                                     </Panel>
                                 </PanelGroup>
-                                <Tools onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
+
                             </Hotkeys>
                         </WorkspaceContext.Provider>
                     </SelectionContext.Provider>
