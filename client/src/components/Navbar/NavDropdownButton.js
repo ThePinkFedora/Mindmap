@@ -1,9 +1,7 @@
 import './NavDropdownButton.scss';
-import { useState } from 'react';
 import arrowIcon from '../../assets/images/arrow-down.svg';
 
 function NavDropdown({ name, isOpen, onToggle }) {
-    // const [isOpen, setIsOpen] = useState(false);
 
     const handleClick = (event) => {
         // setIsOpen(!isOpen);
