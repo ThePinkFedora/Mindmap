@@ -1,0 +1,55 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins' as *;
+
+.create-map{
+    width: 15rem; 
+    display: flex;
+    flex-direction: column;
+
+    &__header{
+        text-align: center;
+        padding: 0.5rem;
+        border-bottom: 1px solid colors.$divider;
+    }
+
+    &__title{
+        @include font-subheader;
+    }
+
+    &__body{
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__row{
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem;
+    }
+
+    &__field{
+        @include font-field;
+        margin-bottom: 0.5rem;
+    }
+
+    &__label{
+        @include font-smallheader;
+        margin-bottom: 0.25rem;
+        display: block;
+
+        &--required:after{
+            content: '*';
+            color: colors.$accent-red;
+            margin-left: 0.125rem;
+        }
+    }
+
+    &__input{
+        @include input-field;
+    }
+
+    &__submit{
+        @include button-primary;
+    }
+}

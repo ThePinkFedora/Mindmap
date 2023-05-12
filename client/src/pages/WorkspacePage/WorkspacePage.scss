@@ -1,0 +1,38 @@
+@use '../../styles/partials/colors';
+@use '../../styles/partials/fonts' as *;
+@use '../../styles/partials/mixins' as *;
+
+
+.workspace-page{
+    height: 100%;
+    min-height: 0;
+    
+    background-color: colors.$background-light-2;
+
+
+    &__loading{
+        @include raised-box-shadow;
+        background-color: colors.$background-light;
+        margin: 10rem auto;
+        padding: 2rem;
+        width: 40rem;
+        text-align: center;
+    }
+
+    &__loading-spinner{
+        background-image: url('../../assets/gifs/spinner.gif');
+        margin: 0 auto;
+        width: 5rem;
+        height: 5rem;
+        background-size: contain;
+    }
+
+    &__loading-message{
+        font-size: 2rem;
+    }
+
+    &__error{
+        font-size: 1.5rem;
+    }
+}
+

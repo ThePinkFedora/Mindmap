@@ -3,7 +3,7 @@ import './Inspector.scss';
 import { LinksContext, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
 import { Links } from '../../js/nodemaps';
 import InspectorItem from '../InspectorItem/InspectorItem';
-import {  deleteField, getFields, updateField } from '../../js/api';
+import { deleteField, getFields, updateField } from '../../js/api';
 import LinkList from '../LinkList/LinkList';
 import linkIcon from '../../assets/images/link.svg';
 import InspectorHeader from './InspectorHeader';
@@ -17,7 +17,7 @@ import { findAndReplace } from '../../js/utils';
  */
 function Inspector({ onSelect, onUpdate }) {
     const nodes = useContext(NodesContext);
-    /** @type {{selection:import('../../js/nodemaps').Selections}} */ 
+    /** @type {{selection:import('../../js/nodemaps').Selections}} */
     const { selection } = useContext(SelectionContext);
     const links = useContext(LinksContext);
     const { workspace, setWorkspace } = useContext(WorkspaceContext);
@@ -27,12 +27,12 @@ function Inspector({ onSelect, onUpdate }) {
 
     useEffect(() => {
         if (fields === null && selection.length) {
-            getFields(1, selection.ids[0])
+            getFields(workspace.id, selection.ids[0])
                 .then(fields => {
                     setFields(fields);
                 });
         }
-    }, [fields, selection]);
+    }, [fields, selection, workspace.id]);
 
     useEffect(() => {
         setFields(null);
@@ -46,15 +46,15 @@ function Inspector({ onSelect, onUpdate }) {
             const node = selectedNodes[0];
             onUpdate({ ...node, description: value });
         } else {
-            updateField(1, selection.ids[0], field_id, { name, value })
+            updateField(workspace.id, selection.ids[0], field_id, { name, value })
                 .then(field => {
-                    setFields(fields => findAndReplace([...fields],field,f => f.id===field.id));
+                    setFields(fields => findAndReplace([...fields], field, f => f.id === field.id));
                 });
         }
     };
-    
+
     const handleDelete = (field_id) => {
-        deleteField(1, selectedNodes[0].id, field_id)
+        deleteField(workspace.id, selectedNodes[0].id, field_id)
             .then(res => setFields(fields.filter(field => field.id !== field_id)));
     };
 
@@ -65,7 +65,6 @@ function Inspector({ onSelect, onUpdate }) {
         onSelect(selection.set(otherNode.id));
         setWorkspace({ ...workspace, focus: otherNode.id });
 
-        console.log({ link, linkNodes, otherNode });
     };
 
     const handleLinkDelete = (link_id) => {
@@ -74,7 +73,7 @@ function Inspector({ onSelect, onUpdate }) {
 
     return (
         <section className="inspector">
-            <InspectorHeader selectedNodes={selectedNodes} onChange={handleChange}/>
+            <InspectorHeader selectedNodes={selectedNodes} onChange={handleChange} />
             <div className="inspector__content">
                 <ul className="inspector__field-list">
                     {selectedNodes.length === 1 && <>
@@ -114,10 +113,10 @@ function Inspector({ onSelect, onUpdate }) {
                         </li>
                     }
                 </ul>
-                
+
             </div>
             <div className="inspector__footer">
-                
+
                 {selectedNodes.length === 1 && <AddField selectedNodes={selectedNodes} setFields={setFields} />}
             </div>
         </section>

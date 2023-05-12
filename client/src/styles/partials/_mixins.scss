@@ -46,6 +46,26 @@
     }
 }
 
+@mixin button-primary{
+    @include font-button;
+    color: colors.$text-light;
+    background-color: colors.$primary-blue;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    padding: 0.375rem 0.75rem;
+
+    &:hover{
+        background-color: colors.$primary-darkblue;
+    }
+
+    &:disabled{
+        color: colors.$text-subtle;
+        background-color: colors.$background-gray;
+        cursor: default;
+    }
+}
+
 @mixin hyperlink{
     color: colors.$primary-blue;
     

@@ -15,20 +15,21 @@ export const LinksContext = createContext(null);
 export const SelectionContext = createContext(null);
 export const WorkspaceContext = createContext(null);
 
-function save(nodes) {
+function save(workspaceId, nodes) {
     nodes.forEach(node => {
         if (node.moved) {
-            updateNode(1, node.id, node);
+            updateNode(workspaceId, node.id, node);
             node.moved = false;
         }
     });
 }
 
 
-function Workspace() {
+function Workspace({ workspaceId }) {
     const [nodes, setNodes] = useState(null);
     const [links, setLinks] = useState(null);
     const [workspace, setWorkspace] = useState({
+        id: workspaceId,
         focus: null,
         cursorX: 0,
         cursorY: 0,
@@ -39,23 +40,24 @@ function Workspace() {
 
     ///Retrieve nodes and links
     useEffect(() => {
-        getNodes(1)
+        getNodes(workspaceId)
             .then(nodeData => {
                 setNodes(nodeData.map((nd, index) => ({ ...nd })))
             });
 
-        retrieveLinks();
-    }, []);
+        getLinks(workspaceId)
+            .then(links => setLinks(links));
+    }, [workspaceId]);
 
 
     function retrieveLinks() {
-        getLinks(1)
+        getLinks(workspaceId)
             .then(links => setLinks(links));
     }
 
     const handleAutoSave = useCallback(() => {
-        save(nodes);
-    },[nodes]);
+        save(workspaceId, nodes);
+    }, [workspaceId, nodes]);
 
     ///Autosave Effect
     useEffect(() => {
@@ -74,7 +76,7 @@ function Workspace() {
         const original = nodes.find(n => n.id === node.id);
 
         if (node.name !== original.name || node.description !== original.description) {
-            updateNode(1, node.id, node)
+            updateNode(workspaceId, node.id, node)
                 .then(nodeData => {
                     setNodes(nodes.filter(n => n.id !== node.id).concat([{ ...nodeData, x: node.x, y: node.y }]));
                 })
@@ -85,7 +87,7 @@ function Workspace() {
     };
 
     const handleAdd = (x = 500, y = 500) => {
-        createNode(1)
+        createNode(workspaceId)
             .then(nodeData => {
                 const node = { ...nodeData, x, y };
                 setNodes([...nodes, node]);
@@ -97,7 +99,7 @@ function Workspace() {
         const ids = [...selection.ids];
 
         //Send delete requests
-        ids.forEach(id => deleteNode(1, id));
+        ids.forEach(id => deleteNode(workspaceId, id));
 
         //Remove deleted nodes, and dependant links
         setNodes(nodes.filter(node => !selection.contains(node.id)));
@@ -126,12 +128,12 @@ function Workspace() {
                                     <Panel className="workspace-panels__panel" defaultSize={20} minSize={15}>
                                         <Sidebar onSelect={handleSelect} onUnlink={handleUnlink} />
                                     </Panel>
-                                    <PanelResizeHandle className="workspace-panels__resize-handle"/>
+                                    <PanelResizeHandle className="workspace-panels__resize-handle" />
                                     <Panel className="workspace-panels__panel" minSize={30}>
-                                        
+
                                         <Map onSelect={handleSelect} onUpdate={handleUpdate} onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink} />
                                     </Panel>
-                                    <PanelResizeHandle className="workspace-panels__resize-handle"/>
+                                    <PanelResizeHandle className="workspace-panels__resize-handle" />
                                     <Panel className="workspace-panels__panel" defaultSize={20} minSize={18}>
                                         <Inspector onSelect={handleSelect} onUpdate={handleUpdate} />
                                     </Panel>

@@ -8,6 +8,14 @@
     height: 3rem;
     display: flex;
 
+    &__nav{
+        display: flex;
+    }
+
+    &__nav-item{
+        display: flex;
+    }
+
     &__logo{
         margin-right: 0.25rem;
         height: 2.5rem;
@@ -15,5 +23,20 @@
 
     &__title{
         font-size: 1.75rem;
+        margin-right: 1rem;
     }
+
+}
+
+.nav-menu{
+    box-shadow: 0 8px 16px -4px rgba(9, 30, 66, 0.25), 0 0 0 1px rgba(9, 30, 66, 0.08);
+    color: colors.$text-dark;
+    background-color: colors.$background-light;
+    border-radius: 0.5rem;
+    position: fixed;
+    max-width: 20rem;
+    top: 3.5rem;
+    left: 13.25rem;
+    overflow: hidden;
+    z-index: 1;
 }

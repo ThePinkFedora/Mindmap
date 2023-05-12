@@ -1,13 +1,20 @@
 import './App.scss';
 import Navbar from './components/Navbar/Navbar';
-import Workspace from './components/Workspace/Workspace';
+import WorkspacePage from './pages/WorkspacePage/WorkspacePage';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="app">
-      <Navbar/>
-      <Workspace/>
-    </div>
+    <BrowserRouter>
+      <div className="app">
+        <Navbar />
+        <Routes>
+          <Route path="" element={<WorkspacePage />} />
+          <Route path="/workspace/:workspaceId" element={<WorkspacePage />} />
+
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
