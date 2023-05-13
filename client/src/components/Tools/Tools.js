@@ -7,8 +7,6 @@ import linkIcon from '../../assets/images/link.svg';
 import unlinkIcon from '../../assets/images/unlink.svg';
 import { ToolNames } from '../../js/tools';
 
-// import { Selections } from '../../js/nodemaps';
-
 /**
  * @param {object} props 
  * @param {onAddNode} props 
@@ -20,7 +18,8 @@ function Tools({ onAdd, onDelete, onLink, onUnlink }) {
     const links = useContext(LinksContext);
     /** @type {{selection:import('../../js/nodemaps').Selections}} */
     const { selection } = useContext(SelectionContext);
-    const { workspace, setWorkspace } = useContext(WorkspaceContext);
+    /** @type {{workspace: import('../Workspace/Workspace').WorkspaceState, dispatchWorkspace: React.Dispatch<{type: string;payload: any;}>}} */
+    const { workspace, dispatchWorkspace } = useContext(WorkspaceContext);
     const [tooltip, setTooltip] = useState(null);
 
     /** @param {Event} event */
@@ -31,9 +30,9 @@ function Tools({ onAdd, onDelete, onLink, onUnlink }) {
 
         ///Toggle or set tool to Add
         if (workspace.tool === ToolNames.Add) {
-            setWorkspace({ ...workspace, tool: null });
+            dispatchWorkspace({ type: 'clear_tool' });
         } else {
-            setWorkspace({ ...workspace, tool: ToolNames.Add });
+            dispatchWorkspace({ type: 'set_tool', payload: { tool: ToolNames.Add } });
         }
     };
 

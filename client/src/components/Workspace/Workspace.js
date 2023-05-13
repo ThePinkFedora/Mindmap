@@ -8,6 +8,18 @@ import Sidebar from '../Sidebar/Sidebar';
 import Tools from '../Tools/Tools';
 import Hotkeys from './Hotkeys';
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { useImmerReducer } from "use-immer";
+
+/**
+ * @typedef {Object} WorkspaceState
+ * @property {string} id
+ * @property {string|string[]|null} focus - Node ids focused
+ * @property {number} cursorX - Cursor y position on map
+ * @property {number} cursorY - Cursor y position on map
+ * @property {number} panningX - Panning x velocity
+ * @property {number} panningY - Panning y velocity
+ * @property {string|null} tool - Active tool name
+ */
 
 
 export const NodesContext = createContext(null);
@@ -24,11 +36,40 @@ function save(workspaceId, nodes) {
     });
 }
 
+/**
+ * @param {WorkspaceState} state 
+ * @param {{type: string,payload: object}} action 
+ */
+function workspaceReducer(state, action) {
+    const { type, payload } = action;
+    switch (type) {
+        case 'clear_focus':
+            state.focus = null;
+            break;
+        case 'set_focus':
+            state.focus = payload.ids;
+            break;
+        case 'move_cursor':
+            [state.cursorX, state.cursorY] = [payload.x, payload.y];
+            break;
+        case 'clear_tool':
+            state.tool = null;
+            break;
+        case 'set_tool':
+            state.tool = payload.tool;
+            break;
+        case 'pan':
+            const { x, y } = payload;
+            if (typeof x !== 'undefined') state.panningX = x;
+            if (typeof y !== 'undefined') state.panningY = y;
+            break;
+    }
+}
 
 function Workspace({ mapId }) {
     const [nodes, setNodes] = useState(null);
     const [links, setLinks] = useState(null);
-    const [workspace, setWorkspace] = useState({
+    const [workspace, dispatchWorkspace] = useImmerReducer(workspaceReducer, {
         id: mapId,
         focus: null,
         cursorX: 0,
@@ -50,38 +91,33 @@ function Workspace({ mapId }) {
             .then(links => setLinks(links));
     }, [mapId]);
 
-
-    function retrieveLinks() {
-        getLinks(mapId)
-            .then(links => setLinks(links));
-    }
-
-    const handleAutoSave = useCallback(() => {
-        save(mapId, nodes);
-    }, [mapId, nodes]);
+    //#region Autosave
+    const handleAutoSave = useCallback(() => save(mapId, nodes), [mapId, nodes]);
 
     ///Autosave Effect
     useEffect(() => {
         const interval = setInterval(handleAutoSave, 5000);
         return () => clearInterval(interval);
     });
+    //#endregion
 
-    /**
-     * @param {Selections} newSelection 
-     */
+    /** @param {Selections} newSelection */
     const handleSelect = (newSelection) => {
         setSelection(newSelection.clone());
     };
 
+    /** @param {import('../../js/nodemaps').Node} node */
     const handleUpdate = (node) => {
         const original = nodes.find(n => n.id === node.id);
-
+        //If the update was to the name or description send an update immediately.
         if (node.name !== original.name || node.description !== original.description) {
             updateNode(mapId, node.id, node)
                 .then(nodeData => {
                     setNodes(nodes.filter(n => n.id !== node.id).concat([{ ...nodeData, x: node.x, y: node.y }]));
                 })
-        } else {
+        }
+        //If the update was just a move, mark the node as moved. (The update will be sent on the next autosave)
+        else {
             node.moved = true;
             setNodes(nodes.filter(n => n.id !== node.id).concat([node]));
         }
@@ -98,16 +134,14 @@ function Workspace({ mapId }) {
 
     const handleDelete = () => {
         const ids = [...selection.ids];
-
         //Send delete requests
         ids.forEach(id => deleteNode(mapId, id));
-
         //Remove deleted nodes, and dependant links
         setNodes(nodes.filter(node => !selection.contains(node.id)));
         setLinks(links.filter(link => !selection.contains(link.node_a_id) && !selection.contains(link.node_b_id)));
-
+        //Clear selection and focus
         handleSelect(selection.clear());
-        setWorkspace({ ...workspace, focus: null });
+        dispatchWorkspace({ type: 'clear_focus' });
     };
 
     const handleLink = (node_a_id, node_b_id) => {
@@ -116,7 +150,7 @@ function Workspace({ mapId }) {
     };
 
     const handleUnlink = (link_id) => {
-        deleteLink(null, link_id).then(res => { retrieveLinks(); });
+        deleteLink(null, link_id).then(res => { getLinks(mapId).then(links => setLinks(links)); });
     };
 
     return (
@@ -124,7 +158,7 @@ function Workspace({ mapId }) {
             <NodesContext.Provider value={nodes}>
                 <LinksContext.Provider value={links}>
                     <SelectionContext.Provider value={{ selection, setSelection: handleSelect }}>
-                        <WorkspaceContext.Provider value={{ workspace, setWorkspace }}>
+                        <WorkspaceContext.Provider value={{ workspace, dispatchWorkspace }}>
                             <Hotkeys onAdd={handleAdd} onDelete={handleDelete} onLink={handleLink} onUnlink={handleUnlink}>
                                 <PanelGroup className="workspace-panels" autoSaveId="workspacePanels" direction="horizontal">
                                     <Panel className="workspace-panels__panel" defaultSize={20} minSize={15}>

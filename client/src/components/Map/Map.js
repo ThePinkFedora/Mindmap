@@ -20,7 +20,8 @@ function Map({ onAdd, onUpdate }) {
     const links = useContext(LinksContext);
     /** @type {{selection:import('../../js/nodemaps').Selections}} */
     const { selection, setSelection } = useContext(SelectionContext);
-    const { workspace, setWorkspace } = useContext(WorkspaceContext);
+    /** @type {{workspace:import('../Workspace/Workspace').WorkspaceState, dispatchWorkspace: import('../Workspace/Workspace').workspaceReducer}} */
+    const { workspace, dispatchWorkspace } = useContext(WorkspaceContext);
     const [draggingID, setDraggingID] = useState(null);
     const transformWrapperRef = useRef(null);
     const panningIntervalRef = useRef(null);
@@ -84,7 +85,7 @@ function Map({ onAdd, onUpdate }) {
      * @param {{x: number, y:number}} position - The position of the cursor relative to the sheet
      */
     const handleMouseMove = (event, position) => {
-        setWorkspace({ ...workspace, cursorX: position.x, cursorY: position.y });
+        dispatchWorkspace({ type: 'move_cursor', payload: { ...position } });
         if (event.buttons === 1) {
             if (draggingID) {
                 event.stopPropagation();
@@ -109,7 +110,7 @@ function Map({ onAdd, onUpdate }) {
         switch (workspace.tool) {
             case ToolNames.Add:
                 onAdd(workspace.cursorX, workspace.cursorY);
-                setWorkspace({ ...workspace, tool: null });
+                dispatchWorkspace({ type: 'clear_focus' });
                 break;
         }
     };
@@ -124,7 +125,7 @@ function Map({ onAdd, onUpdate }) {
                         selection={selection}
                         onSelect={setSelection}
                         workspace={workspace}
-                        setWorkspace={setWorkspace}
+                        dispatchWorkspace={dispatchWorkspace}
                         onMouseMove={handleMouseMove}
                     >
                         {lines.map((line, index) => <Line key={index} start={{ x: line.startX, y: line.startY }} end={{ x: line.endX, y: line.endY }} />)}
@@ -151,7 +152,7 @@ function Map({ onAdd, onUpdate }) {
  * @param {object} props
  * @param {Selection} props.selection
  */
-function Sheet({ children, selection, onSelect, workspace, setWorkspace, onMouseMove }) {
+function Sheet({ children, selection, onSelect, workspace, dispatchWorkspace, onMouseMove }) {
     const sheetRef = useRef(null);
     const transformStateRef = useRef({ previousScale: 1, scale: 1, positionX: 0, positionY: 0 });
 
@@ -173,7 +174,7 @@ function Sheet({ children, selection, onSelect, workspace, setWorkspace, onMouse
         }
         //If there's a focus, clear it
         if (workspace.focus) {
-            setWorkspace({ ...workspace, focus: null });
+            dispatchWorkspace({ type: 'clear_focus' });
         }
     };
 

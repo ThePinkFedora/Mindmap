@@ -20,7 +20,8 @@ function Inspector({ onSelect, onUpdate }) {
     /** @type {{selection:import('../../js/nodemaps').Selections}} */
     const { selection } = useContext(SelectionContext);
     const links = useContext(LinksContext);
-    const { workspace, setWorkspace } = useContext(WorkspaceContext);
+    /** @type {{workspace: import('../Workspace/Workspace').WorkspaceState, dispatchWorkspace: React.Dispatch<{type: string;payload: any;}>}} */
+    const { workspace, dispatchWorkspace } = useContext(WorkspaceContext);
     const selectedNodes = selection.ids.map(id => nodes.find(node => node.id === id));
 
     const [fields, setFields] = useState(null);
@@ -63,8 +64,7 @@ function Inspector({ onSelect, onUpdate }) {
         const linkNodes = Links.findNodes(link, nodes);
         const otherNode = linkNodes.find(n => !selection.contains(n.id));
         onSelect(selection.set(otherNode.id));
-        setWorkspace({ ...workspace, focus: otherNode.id });
-
+        dispatchWorkspace({ type: 'set_focus', payload: { ids: [otherNode.id] } });
     };
 
     const handleLinkDelete = (link_id) => {
