@@ -118,7 +118,7 @@ function Map({ onAdd, onUpdate }) {
 
     return (
         <section className="map" onClick={handleClick}>
-            <TransformWrapper ref={transformWrapperRef} panning={{ disabled: draggingID !== null }} minScale={0.25} limitToBounds={false}>
+            <TransformWrapper ref={transformWrapperRef} panning={{ disabled: draggingID !== null }} minScale={0.25} maxScale={2} limitToBounds={false}>
                 <TransformComponent wrapperStyle={{ width: "100%", height: "100%", }}  >
                     <Sheet
                         selection={selection}

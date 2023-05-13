@@ -4,6 +4,19 @@ const config = {
     baseUrl: process.env.REACT_APP_BASE_URL
 }
 
+/**
+ * GET /maps/
+ * @returns {Promise<object[]>}
+ */
+export async function getMaps() {
+    try {
+        const response = await axios.get(`${config.baseUrl}/maps/`);
+        return response.data.results;
+    } catch (error) {
+        console.error("Error during getMaps");
+        throw error;
+    }
+}
 
 /**
  * GET /maps/:mapId/

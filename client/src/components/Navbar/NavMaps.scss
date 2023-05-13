@@ -1,52 +1,53 @@
-@use '../../styles/partials/colors';
-@use '../../styles/partials/fonts' as *;
-@use '../../styles/partials/mixins' as *;
+@use "../../styles/partials/colors";
+@use "../../styles/partials/fonts" as *;
+@use "../../styles/partials/mixins" as *;
 
-.nav-maps{
-    width: 15rem; 
+.nav-maps {
+  width: 15rem;
+  display: flex;
+  flex-direction: column;
+
+  &__row {
+    border-bottom: 1px solid colors.$divider;
+    padding: 0.5rem;
     display: flex;
     flex-direction: column;
 
-    &__row{
-        border-bottom: 1px solid colors.$divider;
-        padding: 0.5rem;
-        display: flex;
-        flex-direction: column;
-
-        &-heading{
-            @include font-smallheader;
-            color: colors.$text-subtle;
-            margin-bottom: 0.5rem;
-        }
+    &-heading {
+      @include font-smallheader;
+      color: colors.$text-subtle;
+      margin-bottom: 0.5rem;
     }
+  }
 
-    &__map-link{
-        border-radius: 0.25rem;
-        height: 2rem;
-        display: flex;
-        align-items: center;
+  &__map-link {
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
 
-        &:hover{
-            background-color: colors.$background-neutral-hovered;
-        }
+    &:hover {
+      background-color: colors.$background-neutral-hovered;
     }
+  }
 
-    &__map-title{
-        @include font-subheader;
-        margin-left: 1rem;
+  &__map-title {
+    @include font-subheader;
+    margin-left: 1rem;
+  }
+
+  &__create-button {
+    color: colors.$text-light;
+    background-color: colors.$primary-blue;
+    border-radius: 0.25rem;
+    border: none;
+    margin-top: 0.5rem;
+    padding: 0.25rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: colors.$primary-darkblue;
     }
-
-    &__create-button{
-        color: colors.$text-light;
-        background-color: colors.$primary-blue;
-        border-radius: 0.25rem;
-        border: none;
-        margin-top: 0.5rem;
-        padding: 0.25rem;
-        cursor: pointer;
-
-        &:hover{
-            background-color: colors.$primary-darkblue;
-        }
-    }
+  }
 }
