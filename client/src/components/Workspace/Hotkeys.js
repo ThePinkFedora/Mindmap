@@ -4,7 +4,7 @@ import { LinksContext, SelectionContext, WorkspaceContext } from "./Workspace";
 function Hotkeys({ children, onAdd, onDelete, onLink, onUnlink }) {
     const { workspace, setWorkspace } = useContext(WorkspaceContext);
     const links = useContext(LinksContext);
-    const {selection} = useContext(SelectionContext);
+    const { selection } = useContext(SelectionContext);
 
     // const onAddCallback = useCallback(onAdd, []);
     // const onDeleteCallback = useCallback(onDelete, []);
@@ -52,8 +52,13 @@ function Hotkeys({ children, onAdd, onDelete, onLink, onUnlink }) {
             case "a": setWorkspace({ ...workspace, panningX: -1 }); break;
             case "s": setWorkspace({ ...workspace, panningY: 1 }); break;
             case "d": setWorkspace({ ...workspace, panningX: 1 }); break;
+            case "Escape":
+                if (workspace.tool) {
+                    setWorkspace({ ...workspace, tool: null });
+                }
+                break;
         }
-    },[links,onAdd,onDelete,onLink,onUnlink,selection,workspace,setWorkspace]);
+    }, [links, onAdd, onDelete, onLink, onUnlink, selection, workspace, setWorkspace]);
 
     const handleUserKeyRelease = useCallback((event) => {
         //If this active element is any kind of input, just return
@@ -67,20 +72,20 @@ function Hotkeys({ children, onAdd, onDelete, onLink, onUnlink }) {
             case "d": setWorkspace({ ...workspace, panningX: 0 }); break;
             default: break;
         }
-    },[workspace,setWorkspace]);
+    }, [workspace, setWorkspace]);
 
 
 
     useEffect(() => {
         document.addEventListener('keydown', handleUserKeyPress);
         document.addEventListener('keyup', handleUserKeyRelease);
-        
+
 
         return () => {
             document.removeEventListener('keydown', handleUserKeyPress);
             document.removeEventListener('keyup', handleUserKeyRelease);
         }
-    }, [handleUserKeyPress,handleUserKeyRelease]);
+    }, [handleUserKeyPress, handleUserKeyRelease]);
 
     return (
         <>

@@ -17,13 +17,17 @@
   transition: box-shadow 0.2s ease, background-color 0.4s ease;
   cursor: pointer;
 
-  &:hover{
-    background-color: mix(colors.$primary-blue,#52fefe);
+  &--preview {
+    pointer-events: none;
   }
 
-  &--selected{
-    background-color: #E5DB00;
-    box-shadow: 0 0 10px 10px #ffff00AA;
+  &:hover {
+    background-color: mix(colors.$primary-blue, #52fefe);
+  }
+
+  &--selected {
+    background-color: #e5db00;
+    box-shadow: 0 0 10px 10px #ffff00aa;
     border: none;
   }
 
@@ -38,8 +42,8 @@
     box-shadow: 0px 0px 15px #52fefe inset;
     transition: box-shadow 0.2s ease;
 
-    &--selected{
-        box-shadow: 0px 0px 30px #ffff00 inset;
+    &--selected {
+      box-shadow: 0px 0px 30px #ffff00 inset;
     }
   }
 
