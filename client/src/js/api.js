@@ -48,6 +48,23 @@ export async function createMap(name, description) {
     }
 }
 
+/**
+ * PUT /maps/:mapId/
+ * @param {string} map_id 
+ * @param {string} name 
+ * @param {string} description 
+ * @returns {Promise<object>}
+ */
+export async function updateMap(mapId, name, description) {
+    try {
+        const response = await axios.put(`${config.baseUrl}/maps/${mapId}`, { name, description });
+        return response.data;
+    } catch (error) {
+        console.error("Error during updateMap");
+        throw error;
+    }
+}
+
 
 /**
  * GET /maps/:mapId/nodes

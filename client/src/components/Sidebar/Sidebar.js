@@ -1,9 +1,10 @@
 import LinksPanel from '../LinksPanel/LinksPanel';
 import NodesPanel from '../NodesPanel/NodesPanel';
+import OverviewPanel from '../OverviewPanel/OverviewPanel';
 import './Sidebar.scss';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-function Sidebar({onSelect, onUnlink}) {
+function Sidebar({ onSelect, onUnlink }) {
     return (
         <section className="sidebar">
             <Tabs defaultIndex={1}>
@@ -11,19 +12,19 @@ function Sidebar({onSelect, onUnlink}) {
                     <Tab>Overview</Tab>
                     <Tab>Nodes</Tab>
                     <Tab>Links</Tab>
-                    
+
                 </TabList>
 
                 <TabPanel>
-                    <h2>Any content 1</h2>
+                    <OverviewPanel />
                 </TabPanel>
                 <TabPanel>
-                    <NodesPanel onSelect={onSelect}/>
+                    <NodesPanel onSelect={onSelect} />
                 </TabPanel>
                 <TabPanel>
-                    <LinksPanel onSelect={onSelect} onUnlink={onUnlink}/>
+                    <LinksPanel onSelect={onSelect} onUnlink={onUnlink} />
                 </TabPanel>
-                
+
 
             </Tabs>
         </section>

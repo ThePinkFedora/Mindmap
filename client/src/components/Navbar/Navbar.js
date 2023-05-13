@@ -1,20 +1,12 @@
 import './Navbar.scss';
 import logo from '../../assets/logos/MM_logo_white_shadow.png';
 import { NavLink } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import NavDropdown from './NavDropdownButton';
 import NavMaps from './NavMaps';
 import CreateMap from '../CreateMap/CreateMap';
-import { getMaps } from '../../js/api';
 function Navbar() {
     const [activeMenu, setActiveMenu] = useState(null);
-    const [maps, setMaps] = useState(null);
-
-    useEffect(() => {
-        getMaps().then(maps => {
-            setMaps(maps);
-        });
-    }, []);
 
     const handleMenuToggle = (name, state) => {
         if (state) {
@@ -34,7 +26,7 @@ function Navbar() {
 
                 {activeMenu === "Maps" &&
                     <div className="nav-menu">
-                        <NavMaps maps={maps} setActiveMenu={setActiveMenu} close={() => handleMenuToggle("Maps", false)} />
+                        <NavMaps setActiveMenu={setActiveMenu} close={() => handleMenuToggle("Maps", false)} />
                     </div>
                 }
                 {activeMenu === "Create-Map" &&

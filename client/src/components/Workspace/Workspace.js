@@ -25,11 +25,11 @@ function save(workspaceId, nodes) {
 }
 
 
-function Workspace({ workspaceId }) {
+function Workspace({ mapId }) {
     const [nodes, setNodes] = useState(null);
     const [links, setLinks] = useState(null);
     const [workspace, setWorkspace] = useState({
-        id: workspaceId,
+        id: mapId,
         focus: null,
         cursorX: 0,
         cursorY: 0,
@@ -41,24 +41,24 @@ function Workspace({ workspaceId }) {
 
     ///Retrieve nodes and links
     useEffect(() => {
-        getNodes(workspaceId)
+        getNodes(mapId)
             .then(nodeData => {
                 setNodes(nodeData.map((nd, index) => ({ ...nd })))
             });
 
-        getLinks(workspaceId)
+        getLinks(mapId)
             .then(links => setLinks(links));
-    }, [workspaceId]);
+    }, [mapId]);
 
 
     function retrieveLinks() {
-        getLinks(workspaceId)
+        getLinks(mapId)
             .then(links => setLinks(links));
     }
 
     const handleAutoSave = useCallback(() => {
-        save(workspaceId, nodes);
-    }, [workspaceId, nodes]);
+        save(mapId, nodes);
+    }, [mapId, nodes]);
 
     ///Autosave Effect
     useEffect(() => {
@@ -77,7 +77,7 @@ function Workspace({ workspaceId }) {
         const original = nodes.find(n => n.id === node.id);
 
         if (node.name !== original.name || node.description !== original.description) {
-            updateNode(workspaceId, node.id, node)
+            updateNode(mapId, node.id, node)
                 .then(nodeData => {
                     setNodes(nodes.filter(n => n.id !== node.id).concat([{ ...nodeData, x: node.x, y: node.y }]));
                 })
@@ -88,7 +88,7 @@ function Workspace({ workspaceId }) {
     };
 
     const handleAdd = (x = 500, y = 500) => {
-        createNode(workspaceId)
+        createNode(mapId)
             .then(nodeData => {
                 const node = { ...nodeData, x, y };
                 setNodes([...nodes, node]);
@@ -100,7 +100,7 @@ function Workspace({ workspaceId }) {
         const ids = [...selection.ids];
 
         //Send delete requests
-        ids.forEach(id => deleteNode(workspaceId, id));
+        ids.forEach(id => deleteNode(mapId, id));
 
         //Remove deleted nodes, and dependant links
         setNodes(nodes.filter(node => !selection.contains(node.id)));

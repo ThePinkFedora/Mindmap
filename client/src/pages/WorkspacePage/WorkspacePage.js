@@ -35,7 +35,7 @@ function WorkspacePage() {
                     }
                 </div>
             }
-            {map && <Workspace key={mapId} workspaceId={mapId} />}
+            {map && <Workspace key={mapId} mapId={mapId} />}
         </main>
     );
 }
