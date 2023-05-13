@@ -107,6 +107,7 @@ function Workspace({ workspaceId }) {
         setLinks(links.filter(link => !selection.contains(link.node_a_id) && !selection.contains(link.node_b_id)));
 
         handleSelect(selection.clear());
+        setWorkspace({ ...workspace, focus: null });
     };
 
     const handleLink = (node_a_id, node_b_id) => {

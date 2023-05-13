@@ -33,6 +33,7 @@ function Map({ onAdd, onUpdate }) {
                     ? nodes.filter(node => workspace.focus.includes(node.id))
                     : [nodes.find(node => node.id === workspace.focus)];
 
+            console.log(`Focus Effect, focus: `, focusNodes);
 
             const focusAverage = VectorMath.average(focusNodes);
 
