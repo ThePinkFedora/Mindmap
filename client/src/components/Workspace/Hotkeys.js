@@ -49,7 +49,7 @@ function Hotkeys({ children, onAdd, onDelete, onLink, onUnlink }) {
             case "Escape": dispatchWorkspace({ type: 'clear_tool' }); break;
             default: break;
         }
-    }, [links, onAdd, onDelete, onLink, onUnlink, selection, workspace, dispatchWorkspace]);
+    }, [links, onAdd, onDelete, onLink, onUnlink, selection, workspace.cursorX, workspace.cursorY, dispatchWorkspace]);
 
     const handleUserKeyRelease = useCallback((event) => {
         //If this active element is any kind of input, just return
@@ -63,7 +63,7 @@ function Hotkeys({ children, onAdd, onDelete, onLink, onUnlink }) {
             case "d": dispatchWorkspace({ type: 'pan', payload: { x: 0 } }); break;
             default: break;
         }
-    }, [workspace, dispatchWorkspace]);
+    }, [dispatchWorkspace]);
 
     useEffect(() => {
         document.addEventListener('keydown', handleUserKeyPress);
