@@ -5,17 +5,15 @@ import { Links } from '../../js/nodemaps';
 
 /**
  * @param {object} props
- * @param {(selection:Selections)=>{}} props.onSelect
- * @returns 
  */
-function LinksPanel({ onSelect, onUnlink }) {
+function LinksPanel() {
     /**@type {object[]} */
-    const links = useContext(LinksContext);
+    const { links, onUnlink } = useContext(LinksContext);
     /** @type {{selection:import('../../js/nodemaps').Selections}} */
-    const { selection } = useContext(SelectionContext);
+    const { selection, setSelection } = useContext(SelectionContext);
     /**@type {object[]} */
-    const nodes = useContext(NodesContext);
-    const { workspace, dispatchWorkspace } = useContext(WorkspaceContext);
+    const { nodes } = useContext(NodesContext);
+    const { dispatchWorkspace } = useContext(WorkspaceContext);
 
     /**
      * @param {Event} event 
@@ -26,12 +24,12 @@ function LinksPanel({ onSelect, onUnlink }) {
         const nodeIds = [link.node_a_id, link.node_b_id];
         if (event.ctrlKey) {
             if (selectedLinks.includes(link)) {
-                onSelect(selection.remove(nodeIds));
+                setSelection(selection.remove(nodeIds));
             } else {
-                onSelect(selection.add(nodeIds));
+                setSelection(selection.add(nodeIds));
             }
         } else {
-            onSelect(selection.set(nodeIds));
+            setSelection(selection.set(nodeIds));
         }
         dispatchWorkspace({ type: 'set_focus', payload: { ids: selection.ids } });
     };

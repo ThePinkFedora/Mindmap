@@ -14,8 +14,8 @@ import { ToolNames } from '../../js/tools';
  * @param {onLink} props 
  * @param {onUnlink} props
  */
-function Tools({ onAdd, onDelete, onLink, onUnlink }) {
-    const links = useContext(LinksContext);
+function Tools({ onDelete, onLink, onUnlink }) {
+    const { links } = useContext(LinksContext);
     /** @type {{selection:import('../../js/nodemaps').Selections}} */
     const { selection } = useContext(SelectionContext);
     /** @type {{workspace: import('../Workspace/Workspace').WorkspaceState, dispatchWorkspace: React.Dispatch<{type: string;payload: any;}>}} */

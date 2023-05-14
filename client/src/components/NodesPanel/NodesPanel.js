@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import './NodesPanel.scss';
 import { NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
+
 import { searchNodes } from '../../js/api';
 
-function NodesPanel({ onSelect }) {
-    const nodes = useContext(NodesContext);
-    const { selection } = useContext(SelectionContext);
+function NodesPanel() {
+    const { nodes } = useContext(NodesContext);
+    const { selection, setSelection } = useContext(SelectionContext);
     /** @type {{workspace: import('../Workspace/Workspace').WorkspaceState, dispatchWorkspace: React.Dispatch<{type: string;payload: any;}>}} */
     const { workspace, dispatchWorkspace } = useContext(WorkspaceContext);
     const [query, setQuery] = useState(null);
@@ -27,7 +28,7 @@ function NodesPanel({ onSelect }) {
 
     const handleSelect = (event, nodeId) => {
         event.preventDefault();
-        onSelect(event.ctrlKey ? selection.toggle(nodeId) : selection.set(nodeId));
+        setSelection(event.ctrlKey ? selection.toggle(nodeId) : selection.set(nodeId));
         dispatchWorkspace({ type: 'set_focus', payload: { ids: [nodeId] } });
     };
 

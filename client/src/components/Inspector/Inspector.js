@@ -13,18 +13,17 @@ import { findAndReplace } from '../../js/utils';
 
 /**
  * @param {object} props
- * @param {*} props.onUpdate
  */
-function Inspector({ onSelect, onUpdate }) {
-    const nodes = useContext(NodesContext);
+function Inspector() {
+    const { nodes, updateNode } = useContext(NodesContext);
     /** @type {{selection:import('../../js/nodemaps').Selections}} */
-    const { selection } = useContext(SelectionContext);
-    const links = useContext(LinksContext);
+    const { selection, setSelection } = useContext(SelectionContext);
+    const { links, onUnlink } = useContext(LinksContext);
     /** @type {{workspace: import('../Workspace/Workspace').WorkspaceState, dispatchWorkspace: React.Dispatch<{type: string;payload: any;}>}} */
     const { workspace, dispatchWorkspace } = useContext(WorkspaceContext);
-    const selectedNodes = selection.ids.map(id => nodes.find(node => node.id === id));
-
     const [fields, setFields] = useState(null);
+
+    const selectedNodes = selection.ids.map(id => nodes.find(node => node.id === id));
 
     useEffect(() => {
         if (fields === null && selection.length) {
@@ -42,10 +41,10 @@ function Inspector({ onSelect, onUpdate }) {
     const handleChange = ({ name, value }, field_id) => {
         if (field_id === "name") {
             const node = selectedNodes[0];
-            onUpdate({ ...node, name: value });
+            updateNode({ ...node, name: value });
         } else if (field_id === "description") {
             const node = selectedNodes[0];
-            onUpdate({ ...node, description: value });
+            updateNode({ ...node, description: value });
         } else {
             updateField(workspace.id, selection.ids[0], field_id, { name, value })
                 .then(field => {
@@ -63,12 +62,12 @@ function Inspector({ onSelect, onUpdate }) {
         const link = links.find(link => link.id === link_id);
         const linkNodes = Links.findNodes(link, nodes);
         const otherNode = linkNodes.find(n => !selection.contains(n.id));
-        onSelect(selection.set(otherNode.id));
+        setSelection(selection.set(otherNode.id));
         dispatchWorkspace({ type: 'set_focus', payload: { ids: [otherNode.id] } });
     };
 
     const handleLinkDelete = (link_id) => {
-
+        onUnlink(link_id);
     };
 
     return (

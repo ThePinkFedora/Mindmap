@@ -6,14 +6,14 @@ import { getMap, updateMap } from '../../js/api';
 
 
 
-function OverviewPanel({ }) {
+function OverviewPanel() {
     const { workspace } = useContext(WorkspaceContext);
     const [map, setMap] = useState(null);
 
     useEffect(() => {
         getMap(workspace.id)
             .then(map => setMap(map))
-    }, []);
+    }, [workspace.id]);
 
     const handleChange = (value, field) => {
         const newMap = { ...map, [field]: value };

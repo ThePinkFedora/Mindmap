@@ -15,9 +15,9 @@ import { ToolNames } from '../../js/tools';
  * @param {(selections:Selections)=>{}} props.onSelect
  * @returns 
  */
-function Map({ onAdd, onUpdate }) {
-    const nodes = useContext(NodesContext);
-    const links = useContext(LinksContext);
+function Map() {
+    const { nodes, addNode, updateNode } = useContext(NodesContext);
+    const { links } = useContext(LinksContext);
     /** @type {{selection:import('../../js/nodemaps').Selections}} */
     const { selection, setSelection } = useContext(SelectionContext);
     /** @type {{workspace:import('../Workspace/Workspace').WorkspaceState, dispatchWorkspace: import('../Workspace/Workspace').workspaceReducer}} */
@@ -33,8 +33,6 @@ function Map({ onAdd, onUpdate }) {
                 Array.isArray(workspace.focus)
                     ? nodes.filter(node => workspace.focus.includes(node.id))
                     : [nodes.find(node => node.id === workspace.focus)];
-
-            console.log(`Focus Effect, focus: `, focusNodes);
 
             const focusAverage = VectorMath.average(focusNodes);
 
@@ -98,7 +96,7 @@ function Map({ onAdd, onUpdate }) {
                 moveNoves.forEach(node => {
                     node.x += offset.x;
                     node.y += offset.y;
-                    onUpdate(node);
+                    updateNode(node);
                 });
             }
         } else if (draggingID) {
@@ -109,9 +107,10 @@ function Map({ onAdd, onUpdate }) {
     const handleClick = (event) => {
         switch (workspace.tool) {
             case ToolNames.Add:
-                onAdd(workspace.cursorX, workspace.cursorY);
-                dispatchWorkspace({ type: 'clear_focus' });
+                addNode(workspace.cursorX, workspace.cursorY);
+                dispatchWorkspace({ type: 'clear_tool' });
                 break;
+            default: break;
         }
     };
 

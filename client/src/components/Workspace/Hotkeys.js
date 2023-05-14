@@ -1,9 +1,10 @@
 import { useCallback, useContext, useEffect } from "react";
-import { LinksContext, SelectionContext, WorkspaceContext } from "./Workspace";
+import { LinksContext, SelectionContext } from "./WorkspaceProviders";
+import { WorkspaceContext } from './Workspace';
 
 function Hotkeys({ children, onAdd, onDelete, onLink, onUnlink }) {
     const { workspace, dispatchWorkspace } = useContext(WorkspaceContext);
-    const links = useContext(LinksContext);
+    const { links } = useContext(LinksContext);
     const { selection } = useContext(SelectionContext);
 
     const handleUserKeyPress = useCallback((event) => {
