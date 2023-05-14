@@ -31,11 +31,19 @@ function WorkspaceProviders({ mapId, nodes, setNodes, links, setLinks, selection
         }
     };
 
-    const handleAdd = (x = 500, y = 500) => {
+    /**
+     * @param {number} x 
+     * @param {number} y 
+     * @param {boolean} autoLink - If true, the newly created node will be automatically link to the selected node.
+     */
+    const handleAdd = (x = 500, y = 500, autoLink = false) => {
         createNode(mapId)
             .then(nodeData => {
                 const node = { ...nodeData, x, y };
                 setNodes([...nodes, node]);
+                if (autoLink && selection.length === 1) {
+                    handleLink(selection.ids[0], node.id);
+                }
                 handleSelect(selection.set(node.id));
             });
     };
