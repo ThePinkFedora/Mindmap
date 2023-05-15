@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import './Tools.scss';
-import { LinksContext/*, NodesContext*/, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
+import { LinksContext/*, NodesContext*/, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
 import addIcon from '../../assets/images/add.svg';
 import removeIcon from '../../assets/images/remove.svg';
 import linkIcon from '../../assets/images/link.svg';
@@ -14,8 +14,9 @@ import { ToolNames } from '../../js/tools';
  * @param {onLink} props 
  * @param {onUnlink} props
  */
-function Tools({ onDelete, onLink, onUnlink }) {
-    const { links } = useContext(LinksContext);
+function Tools() {
+    const { deleteNodes } = useContext(NodesContext);
+    const { links, onLink, onUnlink } = useContext(LinksContext);
     /** @type {{selection:import('../../js/nodemaps').Selections}} */
     const { selection } = useContext(SelectionContext);
     /** @type {{workspace: import('../Workspace/Workspace').WorkspaceState, dispatchWorkspace: React.Dispatch<{type: string;payload: any;}>}} */
@@ -38,7 +39,7 @@ function Tools({ onDelete, onLink, onUnlink }) {
 
     /** @param {Event} event */
     const handleDelete = (event) => {
-        onDelete(selection.ids[0]);
+        deleteNodes();
     };
 
     const handleLink = (event) => {
