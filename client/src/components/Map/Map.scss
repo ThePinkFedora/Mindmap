@@ -10,9 +10,9 @@
 
   &__sheet {
     background-size: 48px 48px;
-    background-image: linear-gradient(to right, colors.$background-gray 1px, transparent 1px),
-      linear-gradient(to bottom, colors.$background-gray 1px, transparent 1px);
-    //   border: 1px solid colors.$background-gray; 
+    background-image: linear-gradient(to right, colors.$background-gray 1.5px, transparent 1.5px),
+      linear-gradient(to bottom, colors.$background-gray 1.5px, transparent 1.5px);
+    //   border: 1px solid colors.$background-gray;
     box-shadow: 0 0 5px 5px colors.$background-gray;
     // position: relative;
     left: 5rem;

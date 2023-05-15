@@ -1,46 +1,111 @@
-@use '../../styles/partials/colors';
-@use '../../styles/partials/fonts' as *;
-@use '../../styles/partials/mixins' as *;
+@use "../../styles/partials/colors";
+@use "../../styles/partials/fonts" as *;
+@use "../../styles/partials/mixins" as *;
 
-.tools{
-    position: static;
-    left: 0;
-    top: 0;
-    pointer-events: none;
+.tools {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 
-    &__window{
-        background-color: colors.$background-light;
-        position: absolute;
-        left: 22rem;
-        bottom: 0.5rem;
-        width: 8.5rem;
-        @include common-box-shadow;   
-        pointer-events: all
+  &--consume-click {
+    // pointer-events: auto;
+  }
+
+  &__window {
+    background-color: colors.$background-light;
+    @include common-box-shadow;
+    border-radius: 0.5rem;
+    position: absolute;
+    left: 0.5rem;
+    bottom: 0.5rem;
+    width: 8.5rem;
+    pointer-events: all;
+  }
+
+  &__header {
+    border-bottom: 1px solid colors.$divider;
+    padding: 0.5rem;
+  }
+
+  &__title {
+    @include font-windowheader;
+  }
+
+  &__content {
+    padding: 0.5rem;
+    overflow: hidden;
+  }
+
+  &__list {
+    background-color: colors.$background-light-2;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    list-style-type: none;
+    gap: 0.5rem;
+  }
+
+  &__item {
+    overflow: visible;
+  }
+
+  &__button {
+    @include button;
+    white-space: nowrap;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    user-select: none;
+
+    &--active {
+      color: colors.$text-light;
+      background-color: colors.$primary-blue;
+
+      &:hover {
+        background-color: colors.$primary-darkblue;
+      }
     }
+  }
 
-    &__header{
-        padding: 0.5rem;
-        border-bottom: 1px solid colors.$divider;
-    }
+  &__icon {
+    margin-right: 0.5rem;
+    width: 0.65rem;
+    transform: scale(200%, 200%);
+  }
 
-    &__title{
-        @include font-section-header;
-    }
+  &__tooltip {
+    color: colors.$text-light;
+    background-color: #000000aa;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    position: absolute;
+    left: calc(100% + 0.5rem);
+    bottom: 0;
+    width: max-content;
+    max-width: 150%;
+    display: none;
 
-    &__content{
-        padding: 0.5rem;
+    &--visible {
+      display: block;
     }
-
-    &__list{
-        display: flex;
-        flex-direction: column;   
-        align-items: stretch; 
-        list-style-type: none;
-        gap: 0.5rem;
-    }
-
-    &__button{
-        @include button;
-        width: 100%;
-    }
+  }
 }
+
+// .tooltip {
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   pointer-events: none;
+
+//   &__message {
+//     display: none;
+//   }
+//   &:hover &__message {
+//     display: block;
+//   }
+// }

@@ -6,6 +6,21 @@ function getUniqueValues(array) {
   return Array.from(new Set(array));
 }
 
+export class Node {
+  /** @type {string} */
+  id;
+  /** @type {string} */
+  name;
+  /** @type {string} */
+  description;
+  /** @type {number} */
+  x;
+  /** @type {number} */
+  y;
+  /** @type {boolean} */
+  moved;
+}
+
 export class Selections {
   /**@type {string[]} */
   ids = [];
@@ -30,7 +45,7 @@ export class Selections {
    * @returns {Selections} - this
   */
   add(id) {
-    if(Array.isArray(id)){
+    if (Array.isArray(id)) {
       id.forEach(id => this.add(id));
       return this;
     }
@@ -42,7 +57,7 @@ export class Selections {
    * @returns {Selections} - this
   */
   remove(id) {
-    if(Array.isArray(id)){
+    if (Array.isArray(id)) {
       id.forEach(id => this.remove(id));
       return this;
     }
@@ -56,17 +71,17 @@ export class Selections {
   toggle(id) {
     return this.contains(id) ? this.remove(id) : this.add(id);
   }
-  
+
   /**
    * @param {string} id 
    * @returns {Selections} - this
   */
   set(id) {
-    if(Array.isArray(id)){
+    if (Array.isArray(id)) {
       this.ids = [...id];
-    }else if(!id){
+    } else if (!id) {
       this.ids = [];
-    }else{
+    } else {
       this.ids = [id];
     }
 
@@ -98,7 +113,7 @@ export class Selections {
   }
 
   /** Clears selections */
-  clear(){
+  clear() {
     this.ids = [];
     return this;
   }
@@ -158,13 +173,13 @@ export class Field {
 }
 
 export class Lines {
-  static createLines(links,nodes) {
+  static createLines(links, nodes) {
     return links.map(link => {
       const a = nodes.find(node => node.id === link.node_a_id);
       const b = nodes.find(node => node.id === link.node_b_id);
-      if(!a || !b){
+      if (!a || !b) {
         console.error("Link is missing node");
-        return new LineObject(100,100,200,100);
+        return new LineObject(100, 100, 200, 100);
       }
       return new LineObject(a.x, a.y, b.x, b.y);
     })
@@ -182,19 +197,19 @@ export class LineObject {
 }
 
 export class Links {
-  static createLinkObjectList(links,nodes){
-    const getNodeById = (id) => nodes.find(n => n.id===id);
-    return links.map(link => 
-      new LinkObject(link.id,link.node_a_id,link.node_b_id,getNodeById(link.node_a_id).name,getNodeById(link.node_b_id).name)
+  static createLinkObjectList(links, nodes) {
+    const getNodeById = (id) => nodes.find(n => n.id === id);
+    return links.map(link =>
+      new LinkObject(link.id, link.node_a_id, link.node_b_id, getNodeById(link.node_a_id).name, getNodeById(link.node_b_id).name)
     );
   }
 
-  static findNodes(links,nodes){
-    return nodes.filter(node => [links.node_a_id,links.node_b_id].includes(node.id));
+  static findNodes(links, nodes) {
+    return nodes.filter(node => [links.node_a_id, links.node_b_id].includes(node.id));
   }
 
-  static createLinkName(link,nodes){
-    return `${nodes.find(node=>node.id===link.node_a_id).name} - ${nodes.find(node=>node.id===link.node_b_id).name}`;
+  static createLinkName(link, nodes) {
+    return `${nodes.find(node => node.id === link.node_a_id).name} - ${nodes.find(node => node.id === link.node_b_id).name}`;
   }
 }
 
@@ -205,11 +220,11 @@ export class LinkObject {
   node_a_name;
   node_b_name;
 
-  constructor(id,node_a_id,node_b_id,node_a_name,node_b_name){
-      this.id=id;
-      this.node_a_id=node_a_id;
-      this.node_b_id=node_b_id;
-      this.node_a_name=node_a_name;
-      this.node_b_name=node_b_name;
+  constructor(id, node_a_id, node_b_id, node_a_name, node_b_name) {
+    this.id = id;
+    this.node_a_id = node_a_id;
+    this.node_b_id = node_b_id;
+    this.node_a_name = node_a_name;
+    this.node_b_name = node_b_name;
   }
 }

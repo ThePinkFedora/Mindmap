@@ -1,45 +1,42 @@
-@use '../../styles/partials/colors';
-@use '../../styles/partials/mixins' as *;
+@use "../../styles/partials/colors";
+@use "../../styles/partials/mixins" as *;
 
-.workspace{
-    background-color: colors.$background-light;
-    height: 100%;
-    // height: auto;
-    // min-height: 0;
-    display: flex;
-    align-items: stretch;
+.workspace {
+  background-color: colors.$background-light;
+  height: 100%;
+  // height: auto;
+  // min-height: 0;
+  display: flex;
+  align-items: stretch;
 }
 
-.workspace-panels{
+.workspace-panels {
+  &__panel {
+    height: 100%;
 
-    &__panel{
-        
-        height: 100%;
-
-        &:first-child{
-            // @include common-box-shadow;
-            box-shadow: 5px 0px 15px 10px #091E422F;
-        }
-        &:last-child{
-            // @include common-box-shadow;
-            box-shadow: -5px 0px 15px 10px #091E422F;
-        }
-        
+    &:first-child {
+      box-shadow: 5px 0px 15px 10px #091e422f;
     }
-    &__resize-handle{
-        // background-color: colors.$secondary-gray;
-        background-color: colors.$background-gray;
-        background-image: url('../../assets/images/resize-horizontal.svg');
-        background-repeat: no-repeat;
-        background-size: 100% 20%;
-        background-position: 50% 50%;
-        width: 0.5rem;
-        z-index: 0;
-        transition: background-color 0.2s ease, transform 0.1s ease;
-
-        &:hover{
-            background-color: colors.$secondary-gray;
-            transform: scale(200%, 100%);
-        }
+    &:nth-child(3) {
+      position: relative;
     }
+    &:last-child {
+      box-shadow: -5px 0px 15px 10px #091e422f;
+    }
+  }
+  &__resize-handle {
+    background-color: colors.$background-gray;
+    background-image: url("../../assets/images/resize-horizontal.svg");
+    background-repeat: no-repeat;
+    background-size: 100% 20%;
+    background-position: 50% 50%;
+    width: 0.5rem;
+    z-index: 0;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+
+    &:hover {
+      background-color: colors.$secondary-gray;
+      transform: scale(200%, 100%);
+    }
+  }
 }

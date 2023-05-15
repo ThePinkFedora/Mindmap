@@ -10,7 +10,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="" element={<WorkspacePage />} />
-          <Route path="/workspace/:workspaceId" element={<WorkspacePage />} />
+          <Route path="/workspace/:mapId" element={<WorkspacePage />} />
 
         </Routes>
       </div>

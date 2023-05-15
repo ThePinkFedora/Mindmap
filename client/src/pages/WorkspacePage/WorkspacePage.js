@@ -5,21 +5,21 @@ import { useEffect, useState } from 'react';
 import { getMap } from '../../js/api';
 
 function WorkspacePage() {
-    const { workspaceId: workspaceIdParam } = useParams();
+    const { mapId: mapIdParam } = useParams();
     const [map, setMap] = useState(null);
     const [error, setError] = useState(null);
 
-    const workspaceId = workspaceIdParam ?? 1;
+    const mapId = mapIdParam ?? 1;
 
     useEffect(() => {
         setMap(null);
         setError(null);
         setTimeout(() => {
-            getMap(workspaceId)
+            getMap(mapId)
                 .then(map => setMap(map))
                 .catch(error => setError("Failed to load mind map."));
         }, 1000);
-    }, [workspaceId]);
+    }, [mapId]);
 
     return (
         <main className="workspace-page">
@@ -35,7 +35,7 @@ function WorkspacePage() {
                     }
                 </div>
             }
-            {map && <Workspace key={workspaceId} workspaceId={workspaceId} />}
+            {map && <Workspace key={mapId} mapId={mapId} />}
         </main>
     );
 }

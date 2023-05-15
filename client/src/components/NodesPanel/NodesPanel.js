@@ -1,20 +1,19 @@
 import { useContext, useEffect, useState } from 'react';
 import './NodesPanel.scss';
 import { NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
+
 import { searchNodes } from '../../js/api';
 
-function NodesPanel({ onSelect }) {
-    const nodes = useContext(NodesContext);
-    const { selection } = useContext(SelectionContext);
-    const { workspace, setWorkspace } = useContext(WorkspaceContext);
+function NodesPanel() {
+    const { nodes } = useContext(NodesContext);
+    const { selection, setSelection } = useContext(SelectionContext);
+    /** @type {{workspace: import('../Workspace/Workspace').WorkspaceState, dispatchWorkspace: React.Dispatch<{type: string;payload: any;}>}} */
+    const { workspace, dispatchWorkspace } = useContext(WorkspaceContext);
     const [query, setQuery] = useState(null);
     const [queryResult, setQueryResults] = useState(null);
 
     useEffect(() => {
-        if (!query) {
-            setQueryResults(null);
-            return;
-        }
+        if (!query) setQueryResults(null);
     }, [query]);
 
     const handleSubmit = (event) => {
@@ -29,8 +28,8 @@ function NodesPanel({ onSelect }) {
 
     const handleSelect = (event, nodeId) => {
         event.preventDefault();
-        onSelect(event.ctrlKey ? selection.toggle(nodeId) : selection.set(nodeId));
-        setWorkspace({ ...workspace, focus: nodeId });
+        setSelection(event.ctrlKey ? selection.toggle(nodeId) : selection.set(nodeId));
+        dispatchWorkspace({ type: 'set_focus', payload: { ids: [nodeId] } });
     };
 
     /** @param {Event} event */

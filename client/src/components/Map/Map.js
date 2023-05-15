@@ -3,23 +3,25 @@ import './Map.scss';
 import { TransformWrapper, TransformComponent, useTransformEffect } from "react-zoom-pan-pinch";
 import { LinksContext, NodesContext, SelectionContext, WorkspaceContext } from '../Workspace/Workspace';
 import Node from '../Node/Node';
-import {  Lines } from '../../js/nodemaps';
+import { Lines } from '../../js/nodemaps';
 import { useRef } from 'react';
 import Line from '../Line/Line';
 import { Vector2, VectorMath } from '../../js/math';
 import SelectionRect from '../SelectionRect/SelectionRect';
+import { ToolNames } from '../../js/tools';
 
 /**
  * @param {object} props
  * @param {(selections:Selections)=>{}} props.onSelect
  * @returns 
  */
-function Map({ onUpdate }) {
-    const nodes = useContext(NodesContext);
-    const links = useContext(LinksContext);
-    /** @type {{selection:import('../../js/nodemaps').Selections}} */ 
-    const {selection,setSelection} = useContext(SelectionContext);
-    const { workspace, setWorkspace } = useContext(WorkspaceContext);
+function Map() {
+    const { nodes, addNode, updateNode } = useContext(NodesContext);
+    const { links } = useContext(LinksContext);
+    /** @type {{selection:import('../../js/nodemaps').Selections}} */
+    const { selection, setSelection } = useContext(SelectionContext);
+    /** @type {{workspace:import('../Workspace/Workspace').WorkspaceState, dispatchWorkspace: import('../Workspace/Workspace').workspaceReducer}} */
+    const { workspace, dispatchWorkspace } = useContext(WorkspaceContext);
     const [draggingID, setDraggingID] = useState(null);
     const transformWrapperRef = useRef(null);
     const panningIntervalRef = useRef(null);
@@ -32,19 +34,18 @@ function Map({ onUpdate }) {
                     ? nodes.filter(node => workspace.focus.includes(node.id))
                     : [nodes.find(node => node.id === workspace.focus)];
 
-
             const focusAverage = VectorMath.average(focusNodes);
 
             const rect = transformWrapperRef.current.instance.wrapperComponent.getBoundingClientRect();
             transformWrapperRef.current.setTransform(-focusAverage.x + rect.width / 2, -focusAverage.y + rect.height / 2, 1, 300, "easeOut");
-        
+
         }
-    }, [nodes,workspace.focus]);
+    }, [nodes, workspace.focus]);
 
     //Panning effect
     useEffect(() => {
         if (workspace.panningX || workspace.panningY) {
-            function pan(){
+            function pan() {
                 const wrapper = transformWrapperRef.current;
                 const { positionX, positionY } = wrapper.instance.transformState;
                 wrapper.setTransform(positionX + workspace.panningX * -50, positionY + workspace.panningY * -50, wrapper.instance.transformState.scale, 125, "linear");
@@ -82,7 +83,7 @@ function Map({ onUpdate }) {
      * @param {{x: number, y:number}} position - The position of the cursor relative to the sheet
      */
     const handleMouseMove = (event, position) => {
-        setWorkspace({ ...workspace, cursorX: position.x, cursorY: position.y });
+        dispatchWorkspace({ type: 'move_cursor', payload: { ...position } });
         if (event.buttons === 1) {
             if (draggingID) {
                 event.stopPropagation();
@@ -95,7 +96,7 @@ function Map({ onUpdate }) {
                 moveNoves.forEach(node => {
                     node.x += offset.x;
                     node.y += offset.y;
-                    onUpdate(node);
+                    updateNode(node);
                 });
             }
         } else if (draggingID) {
@@ -103,17 +104,27 @@ function Map({ onUpdate }) {
         }
     };
 
+    const handleClick = (event) => {
+        switch (workspace.tool) {
+            case ToolNames.Add:
+                addNode(workspace.cursorX, workspace.cursorY);
+                dispatchWorkspace({ type: 'clear_tool' });
+                break;
+            default: break;
+        }
+    };
+
     const lines = (links !== null && nodes != null) ? Lines.createLines(links, nodes) : [];
 
     return (
-        <section className="map"  >
-            <TransformWrapper ref={transformWrapperRef} panning={{ disabled: draggingID !== null }} minScale={0.25} limitToBounds={false}>
+        <section className="map" onClick={handleClick}>
+            <TransformWrapper ref={transformWrapperRef} panning={{ disabled: draggingID !== null }} minScale={0.25} maxScale={2} limitToBounds={false}>
                 <TransformComponent wrapperStyle={{ width: "100%", height: "100%", }}  >
                     <Sheet
                         selection={selection}
                         onSelect={setSelection}
                         workspace={workspace}
-                        setWorkspace={setWorkspace}
+                        dispatchWorkspace={dispatchWorkspace}
                         onMouseMove={handleMouseMove}
                     >
                         {lines.map((line, index) => <Line key={index} start={{ x: line.startX, y: line.startY }} end={{ x: line.endX, y: line.endY }} />)}
@@ -126,6 +137,9 @@ function Map({ onUpdate }) {
                                 onRelease={handleNodeRelease}
                             />
                         ))}
+                        {workspace.tool === ToolNames.Add &&
+                            <Node node={{ x: workspace.cursorX, y: workspace.cursorY }} isSelected={true} isPreview={true} />
+                        }
                     </Sheet>
                 </TransformComponent>
             </TransformWrapper>
@@ -137,7 +151,7 @@ function Map({ onUpdate }) {
  * @param {object} props
  * @param {Selection} props.selection
  */
-function Sheet({ children, selection, onSelect, workspace, setWorkspace, onMouseMove }) {
+function Sheet({ children, selection, onSelect, workspace, dispatchWorkspace, onMouseMove }) {
     const sheetRef = useRef(null);
     const transformStateRef = useRef({ previousScale: 1, scale: 1, positionX: 0, positionY: 0 });
 
@@ -159,7 +173,7 @@ function Sheet({ children, selection, onSelect, workspace, setWorkspace, onMouse
         }
         //If there's a focus, clear it
         if (workspace.focus) {
-            setWorkspace({ ...workspace, focus: null });
+            dispatchWorkspace({ type: 'clear_focus' });
         }
     };
 

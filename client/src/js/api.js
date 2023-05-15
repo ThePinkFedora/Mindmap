@@ -4,6 +4,19 @@ const config = {
     baseUrl: process.env.REACT_APP_BASE_URL
 }
 
+/**
+ * GET /maps/
+ * @returns {Promise<object[]>}
+ */
+export async function getMaps() {
+    try {
+        const response = await axios.get(`${config.baseUrl}/maps/`);
+        return response.data.results;
+    } catch (error) {
+        console.error("Error during getMaps");
+        throw error;
+    }
+}
 
 /**
  * GET /maps/:mapId/
@@ -31,6 +44,23 @@ export async function createMap(name, description) {
         return response.data;
     } catch (error) {
         console.error("Error during createMap");
+        throw error;
+    }
+}
+
+/**
+ * PUT /maps/:mapId/
+ * @param {string} map_id 
+ * @param {string} name 
+ * @param {string} description 
+ * @returns {Promise<object>}
+ */
+export async function updateMap(mapId, name, description) {
+    try {
+        const response = await axios.put(`${config.baseUrl}/maps/${mapId}`, { name, description });
+        return response.data;
+    } catch (error) {
+        console.error("Error during updateMap");
         throw error;
     }
 }

@@ -18,6 +18,20 @@ function EditableText({ type = "textarea", name, value, placeholder, onChange, o
     const [currentValue, setCurrentValue] = useState(value);
     const fieldRef = useRef(null);
 
+    //#region Finish Editing
+    //This handles completing any pending edit when the component is unmounted
+    const finishEditRef = useRef(null);
+    finishEditRef.current = () => {
+        if (editing) {
+            onEndEdit(currentValue);
+            setEditing(false);
+        }
+    };
+    useEffect(() => {
+        return () => finishEditRef.current();
+    }, [])
+    //#endregion
+
     useEffect(() => {
         setCurrentValue(value);
     }, [value])
@@ -36,6 +50,9 @@ function EditableText({ type = "textarea", name, value, placeholder, onChange, o
         event.stopPropagation();
         event.preventDefault();
         setEditing(true);
+        if (type === 'line') {
+            fieldRef.current.setSelectionRange(0, fieldRef.current.value.length);
+        }
     };
 
     /**
@@ -44,6 +61,7 @@ function EditableText({ type = "textarea", name, value, placeholder, onChange, o
     const handleFocus = (event) => {
         event.stopPropagation();
         setEditing(true);
+
     };
 
     /**
@@ -57,11 +75,17 @@ function EditableText({ type = "textarea", name, value, placeholder, onChange, o
 
     const handleChange = (event) => {
         let { value } = event.target;
-        if(type === "line"){
-            value = value.replace("\n","");
+        if (type === "line") {
+            value = value.replace("\n", "");
         }
         setCurrentValue(value);
         onChange?.(value);
+    };
+
+    const handleKey = (event) => {
+        if (editing && type === 'line' && event.key === 'Enter') {
+            fieldRef.current.blur();
+        }
     };
 
     return (
@@ -75,6 +99,7 @@ function EditableText({ type = "textarea", name, value, placeholder, onChange, o
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 onChange={handleChange}
+                onKeyDown={handleKey}
                 style={fieldStyle}
             ></textarea>
 

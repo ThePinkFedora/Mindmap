@@ -5,17 +5,15 @@ import { Links } from '../../js/nodemaps';
 
 /**
  * @param {object} props
- * @param {(selection:Selections)=>{}} props.onSelect
- * @returns 
  */
-function LinksPanel({ onSelect,onUnlink }) {
+function LinksPanel() {
     /**@type {object[]} */
-    const links = useContext(LinksContext);
-    /** @type {{selection:import('../../js/nodemaps').Selections}} */ 
-    const {selection} = useContext(SelectionContext);
+    const { links, onUnlink } = useContext(LinksContext);
+    /** @type {{selection:import('../../js/nodemaps').Selections}} */
+    const { selection, setSelection } = useContext(SelectionContext);
     /**@type {object[]} */
-    const nodes = useContext(NodesContext);
-    const {workspace,setWorkspace} = useContext(WorkspaceContext);
+    const { nodes } = useContext(NodesContext);
+    const { dispatchWorkspace } = useContext(WorkspaceContext);
 
     /**
      * @param {Event} event 
@@ -26,22 +24,21 @@ function LinksPanel({ onSelect,onUnlink }) {
         const nodeIds = [link.node_a_id, link.node_b_id];
         if (event.ctrlKey) {
             if (selectedLinks.includes(link)) {
-                onSelect(selection.remove(nodeIds));
+                setSelection(selection.remove(nodeIds));
             } else {
-                onSelect(selection.add(nodeIds));
+                setSelection(selection.add(nodeIds));
             }
         } else {
-            onSelect(selection.set(nodeIds));
+            setSelection(selection.set(nodeIds));
         }
-
-        setWorkspace({...workspace,focus:[...selection.ids]});
+        dispatchWorkspace({ type: 'set_focus', payload: { ids: selection.ids } });
     };
 
     /**
      * @param {Event} event 
      * @param {string} linkId 
      */
-    const handleRemove = (event,linkId) => {
+    const handleRemove = (event, linkId) => {
         event.stopPropagation();
         onUnlink(linkId);
     }
@@ -57,11 +54,11 @@ function LinksPanel({ onSelect,onUnlink }) {
                 {links && links.map(link => (
                     <li
                         className={`links-list__item ${selectedLinks.includes(link) ? "links-list__item--selected" : ""}`}
-                        key={link.id} 
+                        key={link.id}
                         onClick={(event) => handleSelect(event, link.id)}
                     >
                         {Links.createLinkName(link, nodes)}
-                        <button className="links-list__remove-button" onClick={(event)=>handleRemove(event,link.id)}>
+                        <button className="links-list__remove-button" onClick={(event) => handleRemove(event, link.id)}>
 
                         </button>
                     </li>
