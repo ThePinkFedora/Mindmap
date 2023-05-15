@@ -15,13 +15,13 @@ Mindmap, this project, is an intuitive and flexible app that allows users to vis
 
 ## Dashboard Overview
 
-![Dashboard Overview](./screenshots/dashboard.png)
+<img src="./screenshots/dashboard.png" width="600">
 
 The Mindmap application dashboard provides a comprehensive workspace for creating, managing, and exploring mind maps. Let's take a closer look at its main components:
 
 ### Navbar
 
-![Navbar Overview](./screenshots/navbar.png)
+<img src="./screenshots/navbar.png" width="600">
 
 The navigation bar located at the top of the dashboard allows easy access to various actions and navigation throughout the site. It includes the following items:
 
@@ -31,7 +31,7 @@ The navigation bar located at the top of the dashboard allows easy access to var
 
 ### Sidebar
 
-![Sidebar Overview](./screenshots/sidebar.png)
+<img src="./screenshots/sidebar.png" width="600">
 
 The sidebar is located on the left side of the dashboard and provides convenient access to different sections and features. It consists of the following tabs:
 
@@ -41,7 +41,7 @@ The sidebar is located on the left side of the dashboard and provides convenient
 
 ### Map
 
-![Map Overview](./screenshots/map.png)
+<img src="./screenshots/map.png" width="600">
 
 The central part of the dashboard is occupied by the mind map itself. This interactive and visually engaging component allows you to visualize your ideas and organize them hierarchically. Key features of the map include:
 
@@ -50,7 +50,7 @@ The central part of the dashboard is occupied by the mind map itself. This inter
   
 ### Inspector
 
-![Inspector Overview](./screenshots/inspector.png)
+<img src="./screenshots/inspector.png" width="400">
 
 The inspector panel, located on the right side of the dashboard, provides detailed information and editing capabilities for the selected node. Its features include:
 
